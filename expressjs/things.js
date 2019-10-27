@@ -4,24 +4,21 @@ var router = express.Router();
 
 /*can embed middleware function before and after
  * the handler function */
-router.use('/',function(req,res,next){
+router.use(function(req,res,next){
 	console.log('Start of route handler');
 	next();
 });
-
-router.get('/',function(req,res,next){
-    res.send('GET route on things');
-	next();
-});
-
-router.use('/',function(req,res,next){
-	console.log('End of route handler');
+var i = 0;
+router.get('/this',(req,res,next)=>{
+	i = i + 1; 
+	res.send('router api this' + i);
 });
 
 
-router.post('/',function(req,res){
-    res.send('POST route on things');
+router.get('*',function(req,res){
+    res.send('don\'t do this in api router');
 });
+
 
 /*export router to make it visible to express library*/
 module.exports = router; 
