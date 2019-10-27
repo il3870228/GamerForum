@@ -45,9 +45,15 @@ app.get('/hello',function(req,res){
 var things = require('./things.js');
 app.use('/things',things);
 /*app.use() will attach 'things' router with the route '/things'*/
+
+/*anonymous function trial*/
 a = (req,res)=>{res.send('get on things with version a \n')};
 app.all('/thing',a);
 
+
+/*third party middleware*/
+// var third = require('third_party.js');
+// app.use('/third',third);
 
 /** dynamic route:
  when this route is specified below other routes, then if none of the other routes is matched, the request will be routed here and treated as id
@@ -70,9 +76,6 @@ app.get('/things/:id([0-9]{5})', function(req, res){
 app.get('*',function(req,res){
     res.send('there is no match');
 });
-
-
-
 
 
 /* app.listen(port,host,backlog,callback)

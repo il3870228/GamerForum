@@ -2,9 +2,22 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/',function(req,res){
-    res.send('GET route on things');
+/*can embed middleware function before and after
+ * the handler function */
+router.use('/',function(req,res,next){
+	console.log('Start of route handler');
+	next();
 });
+
+router.get('/',function(req,res,next){
+    res.send('GET route on things');
+	next();
+});
+
+router.use('/',function(req,res,next){
+	console.log('End of route handler');
+});
+
 
 router.post('/',function(req,res){
     res.send('POST route on things');
