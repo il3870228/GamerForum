@@ -5,12 +5,20 @@ var app = express();
 
 /*the following middleware function will be called on every request made to the server, because router is not defiend.*/
 app.use(function(req, res, next){
-   console.log("Middleware called");
-   
+	//res.send("middleware on all interfaces"); // this line is going to override everything and simply respond
+   console.log("A new request received at " + Date.now());
+
    //This function call is very important. It tells that more processing is
    //required for the current request and is in the next middleware
-   function/route handler.
-   next();
+    // function/route handler.
+   next(); // without next(), the process will hang after the middleware function finishes executing.
+});
+
+/* Middleware function restricted to a specific route */
+app.use('/things',function(req,res,next){
+	console.log("A request for things at "+	Date.now());
+	next();
+
 });
 
 app.get('/',function(req,res){
