@@ -3,6 +3,15 @@
 var express = require('express');
 var app = express();
 
+var url = require('url');
+
+/*parsing HTTP request body*/
+var bodyParser = require('body-parser');
+
+/*for parsing post data into JSON under req.body*/
+app.use(bodyParser.json());
+
+
 /*the following middleware function will be called on every request made to the server, because router is not defiend.*/
 app.use(function(req, res, next){
 	//res.send("middleware on all interfaces"); // this line is going to override everything and simply respond
@@ -18,8 +27,21 @@ app.use(function(req, res, next){
 app.use('/things',function(req,res,next){
 	console.log("A request for things at "+	Date.now());
 	next();
-
 });
+
+/* data JSON trial */
+data = function(req,res,next){
+	console.log(req.body);
+};
+app.post('/data',data);
+
+/*incase form is submitted using get */
+data_get = (req,res,next)=>{
+	console.log(url.parse(req.url,true));
+	let query = url.parse(req.url, true).query;
+};
+app.get('/data',data_get);
+
 
 app.get('/',function(req,res){
 	res.send("Hello");
@@ -83,7 +105,9 @@ app.get('*',function(req,res){
  * backlog: max number of queued pending connections. default 511
  * callback: anc func called when server starts listening for requests
 */
-app.listen(3000);
+let server = app.listen(3000, function(){
+	console.log("Server is running on port 3000 of all interface");
+});
 
 
 /*app.method(path, handler): 'method' can be any one of HTTP verbs: get, set, put, delete
