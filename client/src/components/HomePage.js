@@ -9,6 +9,7 @@ class HomePage extends Component {
       this.onSubmitPost = this.onSubmitPost.bind(this);
   }
 
+  //TODO: send posts to backend database
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
       var newPosts = this.state.posts;
@@ -21,7 +22,7 @@ class HomePage extends Component {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.time+p.content} username="Alex" postContent={p.content} postTime={p.time}/>)}
+        {this.state.posts.map((p) => <Post key={p.time+p.content} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments}/>)}
         </div>
     );
   }
