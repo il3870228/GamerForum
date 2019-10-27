@@ -43,9 +43,9 @@ data_get = (req,res,next)=>{
 app.get('/data',data_get);
 
 
-app.get('/',function(req,res){
-	res.send("Hello");
-});
+// app.get('/',function(req,res){
+// 	res.send("Hello");
+// });
 
 /* different method on the same route */
 app.post('/',function(req,res){
