@@ -3,23 +3,23 @@
 var mysql = require('mysql');
 var con = mysql.createConnection({
 	host: "localhost",
-	user: "cs411g11ns_root",
-	password: "ULR}RTS??Fq1",
-	database: "cs411g11ns_mysql	"
+	user: "root",
+	password: "cs411",
+	database: "test"
 });
 
 
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-	con.query("select * from haha;",(err,result)=>{
+	con.query("select * from haha;",function(err,result,fields){
 		console.log(result);
 	});
 
 });
-con.end(function(err){
-	console.log("mysql connection closed");
-});
+//con.end(function(err){
+//	console.log("mysql connection closed");
+//});
 
 
 
