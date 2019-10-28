@@ -60,35 +60,34 @@ app.use(function(req, res, next){
 });
 
 /* Middleware function restricted to a specific route */
-app.use('/things',function(req,res,next){
-	console.log("A request for things at "+	Date.now());
+app.use('/api',function(req,res,next){
+	console.log("A request for api at "+	Date.now());
+	console.log(req.body);
 	next();
 });
 
 /*saving post; */
 var post_save = function(req,res,next){
-	con.connect(function(err) {
-	  if (err) throw err;
-	  console.log("Connected!");
+	console.log('in saving mode');
+	console.log('more things connected');
 		let table = 'post';
 		let sql = `insert into ${table}(username,time,content) values (${req.body.username},${req.body.time},${req.body.content})`;
 		con.query(sql,function(err,result,fields){
-			console.log("inserted");
+			if (err) console.log(err);
 		});
 		let verify_sql = `select * from ${table}`
-		con.query(verify_sql,(err,result,fields)=>{
+		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
-
 	
-	});
 };
-app.post('/api/post_save',);
+
+app.all('/api/post_save',post_save);
 
 
 /*router*/
-var things = require('./things.js');
-app.use('/api',things);
+// var things = require('./things.js');
+// app.use('/api',things);
 
 /*regex to match all; should be placed after all patterns*/
 // app.get('*',function(req,res){
