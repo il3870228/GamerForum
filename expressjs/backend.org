@@ -6,7 +6,7 @@
 *  how to 
 curl -d '{"key1":"value1", "key2":"value2"}' -H "Content-Type: application/json" -X POST http://localhost:3000/data
 
-curl  -H "Content-Type: application/x-www-form-urlencoded " -X GET http://localhost:3000/data?page=2&limit=3
+http://localhost:3000/data?page=2&limit=3
 application/x-www-form-urlencoded
 
 
