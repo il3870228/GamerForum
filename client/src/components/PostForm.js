@@ -5,6 +5,7 @@ import { Form, Button } from 'antd';
 import 'antd/dist/antd.css';
 import TextArea from "antd/lib/input/TextArea";
 import moment from 'moment';
+import './FormButton.css';
 class PostForm extends Component {
   constructor(props) {
       super(props);
@@ -21,7 +22,7 @@ class PostForm extends Component {
   handleSubmit(event)  {
       console.log('handleSubmit event: ', event);
       var curTime = moment().format('YYYY-MM-DD HH:mm:ss');
-      var p = {time: curTime, content: this.state.value}
+      var p = {username: 'Alex', time: curTime, content: this.state.value, comments: []}
       this.props.onSubmitPost(p);
   }
 
@@ -34,7 +35,7 @@ class PostForm extends Component {
                 onChange={this.handleChange}
                 value={this.state.value}
             />
-            <Button 
+            <Button
                 type="primary" 
                 htmlType="submit"
                 onClick={this.handleSubmit}

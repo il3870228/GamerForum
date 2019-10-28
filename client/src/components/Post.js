@@ -13,12 +13,13 @@ class Post extends Component {
 			postTime: this.props.postTime,
 			likes: 0,
 			action: null,
-			comments: []
+			comments: this.props.comments,
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
 	}
 
+	//TODO: send comment to backend database
 	onComment(c) {
 		console.log('onComment c: ', c);
 		var newComments = this.state.comments;
@@ -63,7 +64,7 @@ class Post extends Component {
 				/>
 				<CommentForm onComment={this.onComment}/>
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.time+p.content} username="Alex" postContent={p.content} postTime={p.time}/>)}
+				{this.state.comments.map((p) => <CommentPost key={p.time+p.content} username={p.username} postContent={p.content} postTime={p.time}/>)}
 				</div>
 			</div>
 			);
