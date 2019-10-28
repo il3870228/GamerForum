@@ -2,17 +2,24 @@
 /*mysql stuff*/
 var mysql = require('mysql');
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword"
+	host: "localhost",
+	user: "cs411g11ns_root",
+	password: "ULR}RTS??Fq1",
+	database: "cs411g11ns_mysql	"
 });
 
 
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-});
+	con.query("select * from haha;",(err,result)=>{
+		console.log(result);
+	});
 
+});
+con.end(function(err){
+	console.log("mysql connection closed");
+});
 
 
 
