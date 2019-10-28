@@ -1,3 +1,5 @@
+
+
 /*routers*/
 var express = require('express');
 var router = express.Router();
@@ -24,9 +26,13 @@ router.post('/this',(req,res,next)=>{
 });
 
 
+post_save = (req,res,next)=>{
+	let postObj = req.body;
+	
+};
 
 
-/* sql part*/
+
 
 
 

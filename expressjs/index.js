@@ -1,4 +1,4 @@
-
+/* sql part*/
 /*mysql stuff*/
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -8,20 +8,29 @@ var con = mysql.createConnection({
 	database: "test"
 });
 
+var promise = new Promise(()=>{
 
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-	con.query("select * from haha;",function(err,result,fields){
+	let table = 'haha';
+	let sql = `select * from ${table}`;
+	console.log(sql);
+	con.query(sql,function(err,result,fields){
 		console.log(result);
 	});
 
 });
-//con.end(function(err){
-//	console.log("mysql connection closed");
-//});
+});
 
 
+
+
+promise.then((value)=>{
+	con.end(function(err){
+		console.log("mysql connection closed");
+	});
+}); // promise trial succeed!
 
 /* importing express and provide an interface
    the 'require' function executes express.js file and return the export object of that file */
@@ -55,6 +64,27 @@ app.use('/things',function(req,res,next){
 	console.log("A request for things at "+	Date.now());
 	next();
 });
+
+/*saving post; */
+var post_save = function(req,res,next){
+	con.connect(function(err) {
+	  if (err) throw err;
+	  console.log("Connected!");
+		let table = 'post';
+		let sql = `insert into ${table}(username,time,content) values (${req.body.username},${req.body.time},${req.body.content})`;
+		con.query(sql,function(err,result,fields){
+			console.log("inserted");
+		});
+		let verify_sql = `select * from ${table}`
+		con.query(verify_sql,(err,result,fields)=>{
+			console.log(result);
+		});
+
+	
+	});
+};
+app.post('/api/post_save',);
+
 
 /*router*/
 var things = require('./things.js');
