@@ -1,2 +1,7 @@
-// 
-
+CREATE TABLE `post`
+( 
+	`commentid` int(10) auto_increment not null,
+	`time` varchar(50),
+	`content` varchar(50),
+	PRIMARY KEY(`commentid`)
+);

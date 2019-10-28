@@ -18,6 +18,8 @@ con.connect(function(err) {
 	console.log(sql);
 	con.query(sql,function(err,result,fields){
 		console.log(result);
+		console.log(result[0]);
+		console.log(result[0].game_name);
 	});
 
 });
@@ -68,10 +70,10 @@ app.use('/api',function(req,res,next){
 
 /*saving post; */
 var post_save = function(req,res,next){
-	console.log('in saving mode');
 	console.log('more things connected');
 		let table = 'post';
-		let sql = `insert into ${table}(username,time,content) values (${req.body.username},${req.body.time},${req.body.content})`;
+		let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		console.log(sql);
 		con.query(sql,function(err,result,fields){
 			if (err) console.log(err);
 		});
@@ -82,8 +84,27 @@ var post_save = function(req,res,next){
 	
 };
 
-app.all('/api/post_save',post_save);
+app.post('/api/post',post_save);
 
+/*saving comment*/
+var comment_save = function(req,res,next){
+	console.log('more things connected');
+		let table = 'comment';
+		let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		console.log(sql);
+		con.query(sql,function(err,result,fields){
+			if (err) console.log(err);
+		});
+		let verify_sql = `select * from ${table}`
+		con.query(verify_sql,function(err,result,fields){
+			console.log(result);
+		});
+	
+};
+app.post('/api/comment',comment_save);
+
+/*search*/
+app.post('/api/search');
 
 /*router*/
 // var things = require('./things.js');
