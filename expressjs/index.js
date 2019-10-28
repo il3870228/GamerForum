@@ -1,5 +1,25 @@
+
+/*mysql stuff*/
+var mysql = require('mysql');
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "yourusername",
+  password: "yourpassword"
+});
+
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
+
+
+
+
 /* importing express and provide an interface
    the 'require' function executes express.js file and return the export object of that file */
+
+
 var express = require('express');
 var app = express();
 

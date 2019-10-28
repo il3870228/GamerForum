@@ -8,14 +8,29 @@ router.use(function(req,res,next){
 	console.log('Start of route handler');
 	next();
 });
+
 var i = 0;
+
 router.get('/this',(req,res,next)=>{
 	i = i + 1; 
-	res.send('router api this' + i);
+	res.send("I wonder what this is ${obj}");
 });
 
 
-router.get('*',function(req,res){
+router.post('/this',(req,res,next)=>{
+	let object = req.body;
+	console.log(object);
+	res.send(object);
+});
+
+
+
+
+/* sql part*/
+
+
+
+router.all('*',function(req,res){
     res.send('don\'t do this in api router');
 });
 
