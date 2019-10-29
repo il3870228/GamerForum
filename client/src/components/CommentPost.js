@@ -5,13 +5,23 @@ class CommentPost extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			username: this.props.username, 
+			username: this.props.username,
 			postContent: this.props.postContent,
 			postTime: this.props.postTime,
 			likes: 0,
 			action: null
 		}
 		this.onClickLike = this.onClickLike.bind(this);
+		this.onClickDelete = this.onClickDelete.bind(this);
+	}
+
+	onClickDelete() {
+		var info = {
+			username: this.props.username,
+			content: this.props.postContent,
+			time: this.props.postTime,
+		}
+		this.props.onDeleteComment(info);
 	}
 
 	onClickLike() {
@@ -36,7 +46,15 @@ class CommentPost extends Component {
 					/>
 				</Tooltip>
 				<span>{likes}</span>
-			</span>
+				</span>,
+				<span key="delete">
+					<Tooltip title="Delete">
+						<Icon
+							type = "delete"
+							onClick={this.onClickDelete}
+						/>
+					</Tooltip>
+				</span>
 		]
     return (
 			<Comment
