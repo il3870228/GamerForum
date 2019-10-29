@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
 import CommentForm from "./CommentForm";
+import EditForm from "./EditForm";
 import CommentPost from "./CommentPost";
 import './Post.css';
 class Post extends Component {
@@ -14,11 +15,23 @@ class Post extends Component {
 			likes: 0,
 			action: null,
 			comments: this.props.comments,
+			onEdit: false
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
 		this.onClickDelete = this.onClickDelete.bind(this);
 		this.onDeleteComment = this.onDeleteComment.bind(this);
+		this.onClickEdit = this.onClickEdit.bind(this);
+		this.onSubmitEdit = this.onSubmitEdit.bind(this);
+	}
+
+	onSubmitEdit(updatedContent) {
+		//TODO: update content in backend database
+		this.setState({onEdit: false, postContent: updatedContent});
+	}
+
+	onClickEdit() {
+		this.setState({onEdit: true});
 	}
 
   onDeleteComment(info) {
@@ -85,6 +98,14 @@ class Post extends Component {
 						onClick={this.onClickDelete}
 					/>
 				</Tooltip>
+			</span>,
+			<span key="edit">
+				<Tooltip title="Edit">
+					<Icon
+						type = "edit"
+						onClick={this.onClickEdit}
+					/>
+				</Tooltip>
 			</span>
 		]
     return (
@@ -97,6 +118,7 @@ class Post extends Component {
 							<span>{this.state.postTime}</span>
 						</Tooltip>}
 				/>
+				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit}/> : null}
 				<CommentForm onComment={this.onComment}/>
 				<div className='inner'>
 				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
