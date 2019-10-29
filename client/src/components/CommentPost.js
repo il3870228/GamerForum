@@ -43,7 +43,8 @@ class CommentPost extends Component {
 	}
 
 	onClickDelete() {
-		this.props.onDeleteComment(commentID);//todo here
+		
+		this.props.onDeleteComment(this.props.commentID);//todo here
 	}
 
 	onClickLike() {

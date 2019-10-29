@@ -66,7 +66,7 @@ class HomePage extends Component {
           console.log('response data', res.data.id);
           const temp = res.data.id;
           var newp = {
-            username: newPost.u,
+            username: newPost.username,
             Posttime: newPost.time,
             postContent: newPost.content,
             comments: newPost.comments,
