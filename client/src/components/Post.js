@@ -119,7 +119,7 @@ class Post extends Component {
 						</Tooltip>}
 				/>
 				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit}/> : null}
-				<CommentForm onComment={this.onComment}/>
+				{this.state.onEdit? null : <CommentForm onComment={this.onComment}/>}
 				<div className='inner'>
 				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
 				</div>
