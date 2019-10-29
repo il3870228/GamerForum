@@ -17,6 +17,33 @@ class Post extends Component {
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
+		this.onClickDelete = this.onClickDelete.bind(this);
+		this.onDeleteComment = this.onDeleteComment.bind(this);
+	}
+
+  onDeleteComment(info) {
+		//TODO: delete comment in backend
+		var ps = this.state.comments;
+    var c = 0;
+    for (c = 0; c < ps.length; c++) {
+      var p = ps[c];
+      if (p.username === info.username &&
+          p.content === info.content &&
+          p.time === info.time) {
+            ps.splice(c, 1);
+            break;
+          }
+    }
+    this.setState({comments: ps});
+	}
+
+	onClickDelete() {
+		var info = {
+			username: this.props.username,
+			content: this.props.postContent,
+			time: this.props.postTime,
+		}
+		this.props.onDeletePost(info);
 	}
 
 	//TODO: send comment to backend database
@@ -50,6 +77,14 @@ class Post extends Component {
 					/>
 				</Tooltip>
 				<span>{likes}</span>
+			</span>,
+			<span key="delete">
+				<Tooltip title="Delete">
+					<Icon
+						type = "delete"
+						onClick={this.onClickDelete}
+					/>
+				</Tooltip>
 			</span>
 		]
     return (
@@ -64,7 +99,7 @@ class Post extends Component {
 				/>
 				<CommentForm onComment={this.onComment}/>
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time}/>)}
+				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
 				</div>
 			</div>
 			);
