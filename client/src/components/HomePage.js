@@ -9,6 +9,12 @@ class HomePage extends Component {
       this.onSubmitPost = this.onSubmitPost.bind(this);
   }
 
+  componentDidMount() {
+    console.log("inside homepage component did mount method");
+    //TODO: get data from back end and set state
+    //fetch().then(data => this.setState({posts: data}));
+  }
+
   //TODO: send posts to backend database
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
