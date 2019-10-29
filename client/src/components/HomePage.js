@@ -28,7 +28,7 @@ class HomePage extends Component {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.time+p.content} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments}/>)}
+        {this.state.posts.map((p) => <Post key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments}/>)}
         </div>
     );
   }
