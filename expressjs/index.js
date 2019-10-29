@@ -1,37 +1,43 @@
 /* sql part*/
 /*mysql stuff*/
-//var mysql = require('mysql');
-//var con = mysql.createConnection({
-//	host: "database-1.c6d68xlnsq5m.us-east-2.rds.amazonaws.com",
-//	user: "admin",
-//	password: "12345678",
-//	database: "CS411",
-//	port: "3306"
-//});
-//
-//var promise = new Promise(()=>{
-//
-//con.connect(function(err) {
-//  if (err) throw err;
-//  console.log("Connected!");
-//	let table = 'USER';
-//	let sql = `select * from ${table}`;
-//	console.log(sql);
-//	con.query(sql,function(err,result,fields){
-//
-//	});
-//
-//	});
-//});
-//
-//
-//
-//
-//promise.then((value)=>{
-//	con.end(function(err){
-//		console.log("mysql connection closed");
-//	});
-//}); // promise trial succeed!
+// var mysql = require('mysql');
+// var con = mysql.createConnection({
+// 	host: "localhost",
+// 	user: "root",
+// 	password: "cs411",
+// 	database: "test"
+// });
+
+
+
+var mysql = require('mysql');
+var con = mysql.createConnection({
+    host: 'database-1.c6d68xlnsq5m.us-east-2.rds.amazonaws.com',
+    user: 'admin',
+    password : '12345678',
+    port: '3306',
+    database : 'CS411'
+});
+
+var promise = new Promise((resolve,reject)=>{
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+	let table = 'haha';
+	let sql = `select * from ${table}`;
+	console.log(sql);
+	con.query(sql,function(err,result,fields){
+		console.log(result)
+	});
+
+	});
+	resolve("success");
+});
+
+
+
+
 
 /* importing express and provide an interface
    the 'require' function executes express.js file and return the export object of that file */
@@ -91,9 +97,9 @@ app.post('/api/post',post_save);
 
 /*saving comment*/
 var comment_save = function(req,res,next){
-	console.log('more things connected');
+		console.log('more things connected');
 		let table = 'comment';
-		let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		let sql = `insert into ${table}( postid , username,time,content) values (${req.body.postid},\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
 			if (err) console.log(err);
@@ -102,12 +108,35 @@ var comment_save = function(req,res,next){
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
-	
 };
 app.post('/api/comment',comment_save);
 
 /*search*/
+var search = (req,res,next)=>{
+	
+};
 app.post('/api/search');
+
+/*get_all basic render functionality for post */
+get_all = (req,res,next) => {
+	let table_post = 'POST';
+	var post_sql = `select * from ${table_post}`;
+	con.query(post_sql, function(err,result,fields){
+		var posts = result;  
+		for (var i = 0 ; i < posts.length ; i++){
+			console.log(`${i} th time`);
+			console.log(posts);
+			table_comment = 'COMMENT';
+			comment_sql = `select * from ${table_comment} where postid=${posts[i].postid};`;
+			con.query(comment_sql, function(err,result,fields){
+				posts[i].comments = result; // attaching commment to specific post
+			} );
+		} // end of for
+		console.log(posts);
+		res.send(posts);
+	});
+};
+app.post('/api/get',get_all);
 
 app.get('*',(req,res)=>{
 	res.send('success mee');
