@@ -1,38 +1,37 @@
 /* sql part*/
 /*mysql stuff*/
-var mysql = require('mysql');
-var con = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: "cs411",
-	database: "test"
-});
-
-var promise = new Promise(()=>{
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-	let table = 'haha';
-	let sql = `select * from ${table}`;
-	console.log(sql);
-	con.query(sql,function(err,result,fields){
-		console.log(result);
-		console.log(result[0]);
-		console.log(result[0].game_name);
-	});
-
-});
-});
-
-
-
-
-promise.then((value)=>{
-	con.end(function(err){
-		console.log("mysql connection closed");
-	});
-}); // promise trial succeed!
+//var mysql = require('mysql');
+//var con = mysql.createConnection({
+//	host: "database-1.c6d68xlnsq5m.us-east-2.rds.amazonaws.com",
+//	user: "admin",
+//	password: "12345678",
+//	database: "CS411",
+//	port: "3306"
+//});
+//
+//var promise = new Promise(()=>{
+//
+//con.connect(function(err) {
+//  if (err) throw err;
+//  console.log("Connected!");
+//	let table = 'USER';
+//	let sql = `select * from ${table}`;
+//	console.log(sql);
+//	con.query(sql,function(err,result,fields){
+//
+//	});
+//
+//	});
+//});
+//
+//
+//
+//
+//promise.then((value)=>{
+//	con.end(function(err){
+//		console.log("mysql connection closed");
+//	});
+//}); // promise trial succeed!
 
 /* importing express and provide an interface
    the 'require' function executes express.js file and return the export object of that file */
@@ -40,6 +39,10 @@ promise.then((value)=>{
 
 var express = require('express');
 var app = express();
+
+app.get('*',(req,res)=>{
+	res.send('success mee');
+});
 
 var url = require('url');
 
@@ -105,6 +108,10 @@ app.post('/api/comment',comment_save);
 
 /*search*/
 app.post('/api/search');
+
+app.get('*',(req,res)=>{
+	res.send('success mee');
+});
 
 /*router*/
 // var things = require('./things.js');
