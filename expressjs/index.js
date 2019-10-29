@@ -8,8 +8,19 @@
 // 	database: "test"
 // });
 
-
 var myport = 2000
+console.log(process.argv)
+var myArgs = process.argv.slice(2);
+console.log('myArgs: ', myArgs);
+if (myArgs.length == 0  ){
+	console.log(`no arg provided, will use default port ${myport}`)
+}
+else if (!isNaN(myArgs[0])){
+	console.log(`provided port is ${myArgs[0]}`)
+	myport = myArgs[0]
+}
+
+
 var mysql = require('mysql');
 var con = mysql.createConnection({
     host: 'database-1.c6d68xlnsq5m.us-east-2.rds.amazonaws.com',
@@ -26,7 +37,7 @@ con.connect(function(err) {
 	let sql = `select * from ${table}`;
 	console.log(sql);
 	con.query(sql,function(err,result,fields){
-		console.log(result)
+		//console.log(result)
 	});
 
 	});
@@ -211,7 +222,7 @@ let server = app.listen(myport, function(){
   PUT: modify some data with data enclosed
   DELETE: delete specified resource
  */
-console.log("start routine");
+console.log("start routine at "+myport);
 
 
 
