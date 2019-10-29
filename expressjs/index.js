@@ -19,12 +19,10 @@ var con = mysql.createConnection({
     database : 'CS411'
 });
 
-var promise = new Promise((resolve,reject)=>{
-
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-	let table = 'haha';
+	let table = 'USER';
 	let sql = `select * from ${table}`;
 	console.log(sql);
 	con.query(sql,function(err,result,fields){
@@ -32,11 +30,6 @@ con.connect(function(err) {
 	});
 
 	});
-	resolve("success");
-});
-
-
-
 
 
 /* importing express and provide an interface
@@ -44,8 +37,10 @@ con.connect(function(err) {
 
 
 var express = require('express');
+var cors = require('cors');
 var app = express();
 
+app.use(cors());
 app.get('*',(req,res)=>{
 	res.send('success mee');
 });
@@ -71,7 +66,7 @@ app.use(function(req, res, next){
 });
 
 /* Middleware function restricted to a specific route */
-app.use('/api',function(req,res,next){
+app.post('/api*',function(req,res,next){
 	console.log("A request for api at "+	Date.now());
 	console.log(req.body);
 	next();
@@ -80,7 +75,7 @@ app.use('/api',function(req,res,next){
 /*saving post; */
 var post_save = function(req,res,next){
 	console.log('more things connected');
-		let table = 'post';
+		let table = 'POST';
 		let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
@@ -90,6 +85,7 @@ var post_save = function(req,res,next){
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
+		res.send({id:1});
 	
 };
 
@@ -98,7 +94,7 @@ app.post('/api/post',post_save);
 /*saving comment*/
 var comment_save = function(req,res,next){
 		console.log('more things connected');
-		let table = 'comment';
+		let table = 'COMMENTS';
 		let sql = `insert into ${table}( postid , username,time,content) values (${req.body.postid},\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
@@ -108,6 +104,7 @@ var comment_save = function(req,res,next){
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
+		res.send({"the freak?":'hahahaha'});
 };
 app.post('/api/comment',comment_save);
 
@@ -168,3 +165,4 @@ let server = app.listen(3000, function(){
   PUT: modify some data with data enclosed
   DELETE: delete specified resource
  */
+console.log("start routine");
