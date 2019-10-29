@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
 import EditForm from './EditForm';
+import axios from 'axios';
+const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 class CommentPost extends Component {
 	constructor(props){
 		super(props);
@@ -11,7 +13,9 @@ class CommentPost extends Component {
 			postTime: this.props.postTime,
 			likes: 0,
 			action: null,
-			onEdit: false
+			onEdit: false,
+			commentID: this.props.commentID, //add new attribute
+			PostID:this.props.PostID
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onClickDelete = this.onClickDelete.bind(this);
@@ -22,6 +26,16 @@ class CommentPost extends Component {
 	onSubmitEdit(updatedContent) {
 		//TODO: update content in backend database
 		this.setState({onEdit: false, postContent: updatedContent});
+		// const send = {
+		// 	cid: this.state.commentID,
+		// 	content: updatedContent
+		// }
+		//call axios update
+		// axios.post(home_url + "api/update",  send)
+		// .then(res =>{
+		// 	console.log(res.data)
+		// })
+		console.log("comment is ", updatedContent);
 	}
 
 	onClickEdit() {
@@ -29,12 +43,7 @@ class CommentPost extends Component {
 	}
 
 	onClickDelete() {
-		var info = {
-			username: this.props.username,
-			content: this.props.postContent,
-			time: this.props.postTime,
-		}
-		this.props.onDeleteComment(info);
+		this.props.onDeleteComment(commentID);//todo here
 	}
 
 	onClickLike() {

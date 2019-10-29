@@ -4,7 +4,7 @@ import Post from './Post';
 import './HomePage.css';
 import axios from 'axios';
 
-const home_url = "http://localhost:3000/"
+const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 
 class HomePage extends Component {
   constructor(props) {
@@ -12,27 +12,34 @@ class HomePage extends Component {
       this.state = {posts: [], value: ''};
       this.onSubmitPost = this.onSubmitPost.bind(this);
       this.onDeletePost = this.onDeletePost.bind(this);
+
   }
 
   componentDidMount() {
     console.log("inside homepage component did mount method");
     //TODO: get data from back end and set state
+
+    //get all post
+
     //fetch().then(data => this.setState({posts: data}));
   }
 
-  onDeletePost(info) {
+  onDeletePost(PID) {
     //TODO: delete post in back end
     var ps = this.state.posts;
     var c = 0;
     for (c = 0; c < ps.length; c++) {
       var p = ps[c];
-      if (p.username === info.username &&
-          p.content === info.content &&
-          p.time === info.time) {
+      if (p.postId === PID) {
             ps.splice(c, 1);
             break;
           }
     }
+    //call axios delete 
+    // axios.post(home_url + "api/delete",  PID)
+    // .then(res=>{
+    //   console.log("finish delete")
+    // })
     this.setState({posts: ps});
   }
 
@@ -40,8 +47,7 @@ class HomePage extends Component {
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
       var newPosts = this.state.posts;
-      newPosts.unshift(newPost);
-      this.setState({posts: newPosts});
+      
       console.log(this.state.posts);
       //set format for the sending data
       const data_send = {
@@ -52,11 +58,22 @@ class HomePage extends Component {
       };
       console.log('data send', data_send);
       // console.log('finish debug');
-      axios.post(home_url + "api/this",  data_send)
+
+      axios.post(home_url + "api/post",  data_send)
         .then(res =>{
           console.log("test");
           console.log(res);
-          console.log('response data', res.data);
+          console.log('response data', res.data.id);
+          const temp = res.data.id;
+          var newp = {
+            username: newPost.u,
+            Posttime: newPost.time,
+            postContent: newPost.content,
+            comments: newPost.comments,
+            postId: temp 
+          }
+          newPosts.unshift(newp);
+          this.setState({posts: newPosts});
         })
   }
 
@@ -64,7 +81,7 @@ class HomePage extends Component {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost}/>)}
+        {this.state.posts.map((p) => <Post key={p.postId} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost}/>)}
         </div>
     );
   }

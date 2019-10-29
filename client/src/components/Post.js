@@ -5,6 +5,9 @@ import CommentForm from "./CommentForm";
 import EditForm from "./EditForm";
 import CommentPost from "./CommentPost";
 import './Post.css';
+
+import axios from 'axios';
+const home_url = "ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 class Post extends Component {
 	constructor(props){
 		super(props);
@@ -15,7 +18,8 @@ class Post extends Component {
 			likes: 0,
 			action: null,
 			comments: this.props.comments,
-			onEdit: false
+			onEdit: false,
+			postId:this.props.postId//post id
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
@@ -28,25 +32,30 @@ class Post extends Component {
 	onSubmitEdit(updatedContent) {
 		//TODO: update content in backend database
 		this.setState({onEdit: false, postContent: updatedContent});
+		const send = {
+			cid: this.state.postId,
+			content: updatedContent
+		}
+		//call axios update
+		
 	}
 
 	onClickEdit() {
 		this.setState({onEdit: true});
 	}
 
-  onDeleteComment(info) {
+  onDeleteComment(CID) {
 		//TODO: delete comment in backend
 		var ps = this.state.comments;
     var c = 0;
     for (c = 0; c < ps.length; c++) {
       var p = ps[c];
-      if (p.username === info.username &&
-          p.content === info.content &&
-          p.time === info.time) {
+      if (p.commentId === CID) {
             ps.splice(c, 1);
-            break;
           }
-    }
+	}
+	
+	//CALL DELETE ON AXIOS
     this.setState({comments: ps});
 	}
 
@@ -63,7 +72,17 @@ class Post extends Component {
 	onComment(c) {
 		console.log('onComment c: ', c);
 		var newComments = this.state.comments;
-		newComments.unshift(c);
+		//call post on axios
+		//get comment id
+		var newC = {
+			// pid = this.state.postId,
+			// content = c.content,
+			// commntid = assigned id,
+			// username = c.username,
+			// time = c.time
+          }
+		
+		newComments.unshift(newC);
 		this.setState({comments: newComments});
 		console.log(this.state.comments);
 	}
@@ -121,7 +140,7 @@ class Post extends Component {
 				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit}/> : null}
 				{this.state.onEdit? null : <CommentForm onComment={this.onComment}/>}
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
+				{this.state.comments.map((p) => <CommentPost key={p.commentId} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
 				</div>
 			</div>
 			);
