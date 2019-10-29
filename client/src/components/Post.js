@@ -8,7 +8,7 @@ class Post extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			username: this.props.username, 
+			username: this.props.username,
 			postContent: this.props.postContent,
 			postTime: this.props.postTime,
 			likes: 0,
@@ -64,7 +64,7 @@ class Post extends Component {
 				/>
 				<CommentForm onComment={this.onComment}/>
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.time+p.content} username={p.username} postContent={p.content} postTime={p.time}/>)}
+				{this.state.comments.map((p) => <CommentPost key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time}/>)}
 				</div>
 			</div>
 			);
