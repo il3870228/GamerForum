@@ -120,16 +120,22 @@ get_all = (req,res,next) => {
 	var post_sql = `select * from ${table_post}`;
 	con.query(post_sql, function(err,result,fields){
 		var posts = result;  
+		for (let i = 0; i < posts.length; i++){
+			posts[i].comments = 0;	
+		}
+		console.log(posts);
+		//while (1){;}
 		for (var i = 0 ; i < posts.length ; i++){
 			console.log(`${i} th time`);
 			console.log(posts);
 			table_comment = 'COMMENT';
 			comment_sql = `select * from ${table_comment} where postid=${posts[i].postid};`;
 			con.query(comment_sql, function(err,result,fields){
-				posts[i].comments = result; // attaching commment to specific post
-			} );
+				console.log(result);
+				posts[i].comments = result
+			});
+			console.log(posts);
 		} // end of for
-		console.log(posts);
 		res.send(posts);
 	});
 };
