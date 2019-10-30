@@ -8,7 +8,7 @@
 // 	database: "test"
 // });
 
-var myport = 2000
+var myport = 3000
 console.log(process.argv)
 var myArgs = process.argv.slice(2);
 console.log('myArgs: ', myArgs);
@@ -78,7 +78,7 @@ app.use(function(req, res, next){
 
 /* Middleware function restricted to a specific route */
 app.post('/api*',function(req,res,next){
-	console.log("A request for api at "+	Date.now());
+	console.log("A post request for api at "+	Date.now());
 	console.log(req.body);
 	next();
 });
@@ -192,9 +192,17 @@ function get_comment(posts){
 };
 app.post('/api/get',get_all);
 
+
+/*delete post*/
+app.post('/api/delete',(req,res,next)=>{
+	
+})
+
 app.get('*',(req,res)=>{
 	res.send('success mee');
 });
+
+
 
 /*router*/
 // var things = require('./things.js');
