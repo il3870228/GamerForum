@@ -7,7 +7,7 @@ import CommentPost from "./CommentPost";
 import './Post.css';
 
 import axios from 'axios';
-const home_url = "ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
+const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 class Post extends Component {
 	constructor(props){
 		super(props);
@@ -19,7 +19,7 @@ class Post extends Component {
 			action: null,
 			comments: this.props.comments,
 			onEdit: false,
-			postId:this.props.postId//post id
+			postid:this.props.postid//post id
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
@@ -31,12 +31,18 @@ class Post extends Component {
 
 	onSubmitEdit(updatedContent) {
 		//TODO: update content in backend database
-		this.setState({onEdit: false, postContent: updatedContent});
+		// this.setState({onEdit: false, postContent: updatedContent});
 		const send = {
-			cid: this.state.postId,
+			postid: this.state.postid,
 			content: updatedContent
 		}
 		//call axios update
+		console.log("send is ", send);
+		axios.post(home_url + "api/update_post", send)
+		.then(res =>{
+			console.log("updated post ", res.data)
+		})
+		this.setState({onEdit: false, postContent: updatedContent});
 		
 	}
 
@@ -50,22 +56,23 @@ class Post extends Component {
     var c = 0;
     for (c = 0; c < ps.length; c++) {
       var p = ps[c];
-      if (p.commentId === CID) {
+      if (p.commentid === CID) {
             ps.splice(c, 1);
           }
 	}
-	
+	var send ={
+		commentid: CID
+	}
 	//CALL DELETE ON AXIOS
+	axios.post(home_url + "api/delete_comment", send)
+		.then(res=>{
+			console.log("delete comment success")
+		})
     this.setState({comments: ps});
 	}
 
 	onClickDelete() {
-		var info = {
-			username: this.props.username,
-			content: this.props.postContent,
-			time: this.props.postTime,
-		}
-		this.props.onDeletePost(info);
+		this.props.onDeletePost(this.state.postid);
 	}
 
 	//TODO: send comment to backend database
@@ -75,16 +82,22 @@ class Post extends Component {
 		//call post on axios
 		//get comment id
 		var newC = {
-			// pid = this.state.postId,
-			// content = c.content,
-			// commntid = assigned id,
-			// username = c.username,
-			// time = c.time
-          }
-		
-		newComments.unshift(newC);
-		this.setState({comments: newComments});
-		console.log(this.state.comments);
+			username: c.username,
+			time: c.time,
+			content: c.content,
+			// comments: c.comments,
+			postid: this.state.postid
+		  }
+		console.log("comment send ",newC)
+		axios.post(home_url + "api/post_comment", newC)
+		.then(res => {
+			console.log("post comment success")
+			
+			this.props.getAllPosts()
+		})
+		// newComments.unshift(newC);
+		// this.setState({comments: newComments});
+		// console.log(this.state.comments);
 	}
 
 	onClickLike() {
@@ -140,7 +153,7 @@ class Post extends Component {
 				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit}/> : null}
 				{this.state.onEdit? null : <CommentForm onComment={this.onComment}/>}
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.commentId} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
+				{this.state.comments.map((p) => <CommentPost key={p.commentid} commentid={p.commentid} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
 				</div>
 			</div>
 			);

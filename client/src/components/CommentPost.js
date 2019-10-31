@@ -14,8 +14,8 @@ class CommentPost extends Component {
 			likes: 0,
 			action: null,
 			onEdit: false,
-			commentID: this.props.commentID, //add new attribute
-			PostID:this.props.PostID
+			commentid: this.props.commentid, //add new attribute
+			postid:this.props.postid
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onClickDelete = this.onClickDelete.bind(this);
@@ -25,17 +25,18 @@ class CommentPost extends Component {
 
 	onSubmitEdit(updatedContent) {
 		//TODO: update content in backend database
+		console.log("on submit edit: ", this.state);
+		const send = {
+			commentid: this.state.commentid,
+			content: updatedContent
+		}
+		// // call axios update
+		console.log("send is ", send);
+		axios.post(home_url + "api/update_comment", send)
+		.then(res =>{
+			console.log("updated data", res.data)
+		})
 		this.setState({onEdit: false, postContent: updatedContent});
-		// const send = {
-		// 	cid: this.state.commentID,
-		// 	content: updatedContent
-		// }
-		//call axios update
-		// axios.post(home_url + "api/update",  send)
-		// .then(res =>{
-		// 	console.log(res.data)
-		// })
-		console.log("comment is ", updatedContent);
 	}
 
 	onClickEdit() {
@@ -44,7 +45,7 @@ class CommentPost extends Component {
 
 	onClickDelete() {
 		
-		this.props.onDeleteComment(this.props.commentID);//todo here
+		this.props.onDeleteComment(this.state.commentid);//todo here
 	}
 
 	onClickLike() {

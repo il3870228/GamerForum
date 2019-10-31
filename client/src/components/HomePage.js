@@ -12,6 +12,7 @@ class HomePage extends Component {
       this.state = {posts: [], value: ''};
       this.onSubmitPost = this.onSubmitPost.bind(this);
       this.onDeletePost = this.onDeletePost.bind(this);
+      this.getAllPosts = this.getAllPosts.bind(this);
 
   }
 
@@ -20,8 +21,24 @@ class HomePage extends Component {
     //TODO: get data from back end and set state
 
     //get all post
-
+    axios.post(home_url + "api/get")
+    .then(res =>{
+      console.log("mount data", res.data)
+      this.setState({posts: res.data});
+    })
     //fetch().then(data => this.setState({posts: data}));
+  }
+
+  getAllPosts(){
+    console.log("inside get all posts");
+    //TODO: get data from back end and set state
+
+    //get all post
+    axios.post(home_url + "api/get")
+    .then(res =>{
+      console.log("get all posts mount data", res.data)
+      this.setState({posts: res.data});
+    })
   }
 
   onDeletePost(PID) {
@@ -30,16 +47,20 @@ class HomePage extends Component {
     var c = 0;
     for (c = 0; c < ps.length; c++) {
       var p = ps[c];
-      if (p.postId === PID) {
+      if (p.postid === PID) {
             ps.splice(c, 1);
             break;
           }
     }
     //call axios delete 
-    // axios.post(home_url + "api/delete",  PID)
-    // .then(res=>{
-    //   console.log("finish delete")
-    // })
+    var send = {
+      postid : PID
+    }
+    console.log("data send", send)
+    axios.post(home_url + "api/delete_post",  send)
+    .then(res=>{
+      console.log("finish delete")
+    })
     this.setState({posts: ps});
   }
 
@@ -61,27 +82,29 @@ class HomePage extends Component {
 
       axios.post(home_url + "api/post",  data_send)
         .then(res =>{
-          console.log("test");
-          console.log(res);
-          console.log('response data', res.data.id);
-          const temp = res.data.id;
-          var newp = {
-            username: newPost.username,
-            Posttime: newPost.time,
-            postContent: newPost.content,
-            comments: newPost.comments,
-            postId: temp 
-          }
-          newPosts.unshift(newp);
-          this.setState({posts: newPosts});
+          // console.log("test");
+          // console.log(res);
+          // console.log('response data', res.data.id);
+          // const temp = res.data.id;
+          // var newp = {
+          //   username: newPost.username,
+          //   Posttime: newPost.time,
+          //   postContent: newPost.content,
+          //   comments: newPost.comments,
+          //   postid: temp 
+          // }
+          // newPosts.unshift(newp);
+          // this.setState({posts: newPosts});
+          this.getAllPosts();
         })
+
   }
 
   render() {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.postId} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost}/>)}
+        {this.state.posts.map((p) => <Post key={p.postid+"clength: "+p.comments.length} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost} getAllPosts={this.getAllPosts}/>)}
         </div>
     );
   }
