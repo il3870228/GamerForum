@@ -2,9 +2,44 @@
   CLOSED: [2019-10-27 Sun 15:13]
 
 * sql prepare statement with input string? 
+  promise trial succeed!!!
 
 *  how to 
 curl -d '{"username":"value1", "time":"value2", "content":"hHHH"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/post
 
+curl -d '{"key1":"value1", "key2":"value2"}' -H "Content-Type: application/json" -X POST "ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/api"
+
+curl -X POST "ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/api/get"
 http://localhost:3000/data?page=2&limit=3
 application/x-www-form-urlencoded
+
+curl -X POST "ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/api/getaaa"
+
+* mysql stuff
+** reset autoincrement counter: 
+ALTER TABLE tablename AUTO_INCREMENT = 1
+
+** rename table
+RENAME TABLE old_table_name TO new_table_name;
+
+* DEMO 1:
+** DONE post post
+   CLOSED: [2019-10-30 Wed 21:59]
+** DONE post comment
+   CLOSED: [2019-10-30 Wed 21:59]
+** DONE update post 
+   CLOSED: [2019-10-30 Wed 21:59]
+** DONE update comment
+   CLOSED: [2019-10-30 Wed 21:59]
+** DONE delete comment
+   CLOSED: [2019-10-30 Wed 21:59]
+** DONE delete post
+   CLOSED: [2019-10-30 Wed 21:59]
+
+http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com
+
+
+* miscellaneous
+netstat -tupln
+
+
