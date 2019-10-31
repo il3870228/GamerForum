@@ -67,7 +67,6 @@ class HomePage extends Component {
   //TODO: send posts to backend database
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
-      var newPosts = this.state.posts;
       
       console.log(this.state.posts);
       //set format for the sending data

@@ -78,7 +78,6 @@ class Post extends Component {
 	//TODO: send comment to backend database
 	onComment(c) {
 		console.log('onComment c: ', c);
-		var newComments = this.state.comments;
 		//call post on axios
 		//get comment id
 		var newC = {
