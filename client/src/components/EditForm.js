@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Input } from 'antd';
+//import Form from 'react-bootstrap/Form';
+//import Button from 'react-bootstrap/Button';
+import { Form, Button } from 'antd';
 import 'antd/dist/antd.css';
-class SearchForm extends Component {
+import TextArea from "antd/lib/input/TextArea";
+import './FormButton.css';
+class EditForm extends Component {
   constructor(props) {
       super(props);
       this.state = {value: ''};
@@ -15,29 +19,28 @@ class SearchForm extends Component {
   }
 
   handleSubmit(event)  {
-      console.log('handleSubmit event: ', event);
-      this.props.onSearch(this.state.value);
+      this.props.onSubmitEdit(this.state.value);
   }
 
   render() {
     return (
         <div>
         <Form.Item>
-            <Input
+            <TextArea
+                rows={4}
                 onChange={this.handleChange}
                 value={this.state.value}
-                placeholder="Enter username"
             />
-            <Button 
-                type="primary" 
+            <Button
+                type="primary"
                 htmlType="submit"
                 onClick={this.handleSubmit}
             >
-                Search
+                Update
             </Button>
         </Form.Item>
         </div>
     );
   }
 }
-export default SearchForm;
+export default EditForm;
