@@ -4,7 +4,7 @@ import Post from './Post';
 import './HomePage.css';
 import axios from 'axios';
 
-const home_url = "http://localhost:3000/"
+const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 
 class HomePage extends Component {
   constructor(props) {
@@ -12,27 +12,55 @@ class HomePage extends Component {
       this.state = {posts: [], value: ''};
       this.onSubmitPost = this.onSubmitPost.bind(this);
       this.onDeletePost = this.onDeletePost.bind(this);
+      this.getAllPosts = this.getAllPosts.bind(this);
+
   }
 
   componentDidMount() {
     console.log("inside homepage component did mount method");
     //TODO: get data from back end and set state
+
+    //get all post
+    axios.post(home_url + "api/get")
+    .then(res =>{
+      console.log("mount data", res.data)
+      this.setState({posts: res.data});
+    })
     //fetch().then(data => this.setState({posts: data}));
   }
 
-  onDeletePost(info) {
+  getAllPosts(){
+    console.log("inside get all posts");
+    //TODO: get data from back end and set state
+
+    //get all post
+    axios.post(home_url + "api/get")
+    .then(res =>{
+      console.log("get all posts mount data", res.data)
+      this.setState({posts: res.data});
+    })
+  }
+
+  onDeletePost(PID) {
     //TODO: delete post in back end
     var ps = this.state.posts;
     var c = 0;
     for (c = 0; c < ps.length; c++) {
       var p = ps[c];
-      if (p.username === info.username &&
-          p.content === info.content &&
-          p.time === info.time) {
+      if (p.postid === PID) {
             ps.splice(c, 1);
             break;
           }
     }
+    //call axios delete 
+    var send = {
+      postid : PID
+    }
+    console.log("data send", send)
+    axios.post(home_url + "api/delete_post",  send)
+    .then(res=>{
+      console.log("finish delete")
+    })
     this.setState({posts: ps});
   }
 
@@ -40,8 +68,7 @@ class HomePage extends Component {
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
       var newPosts = this.state.posts;
-      newPosts.unshift(newPost);
-      this.setState({posts: newPosts});
+      
       console.log(this.state.posts);
       //set format for the sending data
       const data_send = {
@@ -52,19 +79,32 @@ class HomePage extends Component {
       };
       console.log('data send', data_send);
       // console.log('finish debug');
-      axios.post(home_url + "api/this",  data_send)
+
+      axios.post(home_url + "api/post",  data_send)
         .then(res =>{
-          console.log("test");
-          console.log(res);
-          console.log('response data', res.data);
+          // console.log("test");
+          // console.log(res);
+          // console.log('response data', res.data.id);
+          // const temp = res.data.id;
+          // var newp = {
+          //   username: newPost.username,
+          //   Posttime: newPost.time,
+          //   postContent: newPost.content,
+          //   comments: newPost.comments,
+          //   postid: temp 
+          // }
+          // newPosts.unshift(newp);
+          // this.setState({posts: newPosts});
+          this.getAllPosts();
         })
+
   }
 
   render() {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.time+p.content+Math.random()} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost}/>)}
+        {this.state.posts.map((p) => <Post key={p.postid+"clength: "+p.comments.length} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost} getAllPosts={this.getAllPosts}/>)}
         </div>
     );
   }

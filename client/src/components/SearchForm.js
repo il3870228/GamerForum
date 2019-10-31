@@ -26,6 +26,7 @@ class SearchForm extends Component {
             <Input
                 onChange={this.handleChange}
                 value={this.state.value}
+                placeholder="Enter username"
             />
             <Button 
                 type="primary" 
