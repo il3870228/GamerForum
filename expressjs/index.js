@@ -194,8 +194,7 @@ app.post('/api/get',get_all);
 
 
 /*delete post*/
-
-var post_deleten = (req,res,next)=>{
+var post_delete = (req,res,next)=>{
 	console.log(`start deleting post with post id ${req.body.postid}`);
 		let table = 'POST';
 		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
@@ -213,6 +212,47 @@ var post_deleten = (req,res,next)=>{
 }
 app.post('/api/delete', post_delete)
 
+/*delete comment*/
+var comment_delete = (req,res,next)=>{
+	console.log('delete comment with id '+ req.body.commentid);
+		let table = 'COMMENTS';
+		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		// delete from POST where postid=5;
+		let sql = `delete from ${table} where ${req.body.commentid}`
+		console.log(sql);
+		con.query(sql,function(err,result,fields){
+			if (err) console.log(err);
+		});
+		let verify_sql = `select * from ${table}`
+		con.query(verify_sql,function(err,result,fields){
+			console.log(result);
+		});
+		res.send({id:'success!'});
+}
+app.post('/api/delete_comment', comment_delete)
+
+/*update comment*/
+var comment_update = function(req,res,next){
+	console.log(`start updating comment with comment id ${req.body.commentid}`);
+		let table = 'COMMENTS';
+		/*update POST set uid=NULL where postid=5;*/
+		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		let sql = `update ${table} set content=${req.body.content} where commentid=${req.body.commentid}`;
+		console.log(sql);
+		con.query(sql,function(err,result,fields){
+			if (err) console.log(err);
+		});
+		let verify_sql = `select * from ${table}`
+		con.query(verify_sql,function(err,result,fields){
+			console.log(result);
+		});
+		res.send({id:'success!'});
+};
+app.post('/api/update_comment',comment_update);
+
+app.get('*',(req,res)=>{
+	res.send('success mee');
+});
 
 
 /*update post; */
