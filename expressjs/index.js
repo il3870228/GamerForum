@@ -27,7 +27,8 @@ var con = mysql.createConnection({
     user: 'admin',
     password : '12345678',
     port: '3306',
-    database : 'CS411'
+    database : 'CS411',
+	multipleStatements:true
 });
 
 con.connect(function(err) {
@@ -37,7 +38,9 @@ con.connect(function(err) {
 	let sql = `select * from ${table}`;
 	console.log(sql);
 	con.query(sql,function(err,result,fields){
+		if (err) throw err;
 		//console.log(result)
+		console.log("first select is successful!!")
 	});
 
 	});
@@ -90,7 +93,7 @@ var post_save = function(req,res,next){
 		let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
-			if (err) console.log(err);
+			// first query is done. second one
 		});
 		let verify_sql = `select * from ${table}`
 		con.query(verify_sql,function(err,result,fields){
@@ -104,7 +107,7 @@ app.post('/api/post',post_save);
 
 /*saving comment*/
 var comment_save = function(req,res,next){
-		console.log('more things connected');
+		console.log('post comments start');
 		let table = 'COMMENTS';
 		let sql = `insert into ${table}( postid , username,time,content) values (${req.body.postid},\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		console.log(sql);
@@ -117,13 +120,21 @@ var comment_save = function(req,res,next){
 		});
 		res.send({"the freak?":'hahahaha'});
 };
-app.post('/api/comment',comment_save);
+app.post('/api/post_comment',comment_save);
 
 /*search*/
 var search = (req,res,next)=>{
-	
+	console.log('search here')
+	let table = 'POST'
+	let sql = `select distinct * from ${table} where username like \'%${req.body.value}%\'`
+	console.log(sql)
+	con.query(sql, (err,result,fields)=>{
+		if (err) throw err 
+		res.send(result)
+		console.log('search done')
+	})
 };
-app.post('/api/search');
+app.post('/api/search',search);
 
 /*get_all basic render functionality for post */
 get_all = (req,res,next) => {
@@ -138,7 +149,7 @@ var table = 'POST'
 var comments = 'COMMENTS';
 // using a promise to return values from callback function AND enforce order of execution
 var promise = new Promise(function(resolve,reject){
-	var sql = `select * from ${table} order by postid asc`
+	var sql = `select * from ${table} order by postid desc`
 	console.log(sql)
 	Promise.resolve().then(()=>{
 		var posts={}
@@ -163,7 +174,7 @@ promise.then((value)=>{
 })
 
 function get_comment(posts){
-	var sql = `select * from ${comments} order by commentid asc`
+	var sql = `select * from ${comments} order by commentid desc`
 	con.query(sql,function(err,result){
 		/*posts still accessible*/
 		// console.log(result) 
@@ -183,7 +194,7 @@ function get_comment(posts){
 	let posts_js = JSON.parse(JSON.stringify(posts))
 	// console.log(posts_js)
 	console.log('doomsday')
-	console.log(posts_js[0])
+	// console.log(posts_js[0])
 	/*because of the scope and stuff I need to res.send here?*/
 	res.send(posts_js)
 	})
@@ -196,21 +207,24 @@ app.post('/api/get',get_all);
 /*delete post*/
 var post_delete = (req,res,next)=>{
 	console.log(`start deleting post with post id ${req.body.postid}`);
-		let table = 'POST';
-		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+		
+		// delete all comments first then delete all posts
+		let table = 'POST'
+		let comment = 'COMMENTS'
 		// delete from POST where postid=5;
-		let sql = `delete from ${table} where ${req.body.postid}`
+		let sql = `delete from ${comment} where postid = ${req.body.postid} ;delete from ${table} where postid = ${req.body.postid}`
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
-			if (err) console.log(err);
+			if (err) throw err;
+			console.log('sql execution success!!!')
+			res.send({id:'end of delete post!'});
 		});
 		let verify_sql = `select * from ${table}`
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
-		res.send({id:'success!'});
 }
-app.post('/api/delete', post_delete)
+app.post('/api/delete_post', post_delete)
 
 /*delete comment*/
 var comment_delete = (req,res,next)=>{
@@ -218,7 +232,7 @@ var comment_delete = (req,res,next)=>{
 		let table = 'COMMENTS';
 		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
 		// delete from POST where postid=5;
-		let sql = `delete from ${table} where ${req.body.commentid}`
+		let sql = `delete from ${table} where commentid = ${req.body.commentid}`
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
 			if (err) console.log(err);
@@ -246,14 +260,9 @@ var comment_update = function(req,res,next){
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
-		res.send({id:'success!'});
+		res.send({id:'success!update comment'});
 };
 app.post('/api/update_comment',comment_update);
-
-app.get('*',(req,res)=>{
-	res.send('success mee');
-});
-
 
 /*update post; */
 var post_update = function(req,res,next){
@@ -261,23 +270,27 @@ var post_update = function(req,res,next){
 		let table = 'POST';
 		/*update POST set uid=NULL where postid=5;*/
 		// let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
-		let sql = `update ${table} set content=${req.body.content} where postid=${req.body.postid}`;
+		let sql = `update ${table} set content=\'${req.body.content}\' where postid=${req.body.postid}`;
 		console.log(sql);
 		con.query(sql,function(err,result,fields){
 			if (err) console.log(err);
+			res.send({id:'success!update post'});
 		});
 		let verify_sql = `select * from ${table}`
 		con.query(verify_sql,function(err,result,fields){
 			console.log(result);
 		});
-		res.send({id:'success!'});
 };
 app.post('/api/update_post',post_update);
 
+/*sanity check*/
 app.get('*',(req,res)=>{
 	res.send('success mee');
 });
 
+app.post('*',(req,res)=>{
+	res.send('DO NOT DO THAAAAAAATTTTTTTTTTTTTTTT')
+})
 
 
 /*router*/
