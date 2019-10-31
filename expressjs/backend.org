@@ -1,0 +1,10 @@
+* DONE req/res JSON
+  CLOSED: [2019-10-27 Sun 15:13]
+
+* sql prepare statement with input string? 
+
+*  how to 
+curl -d '{"username":"value1", "time":"value2", "content":"hHHH"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/post
+
+http://localhost:3000/data?page=2&limit=3
+application/x-www-form-urlencoded
