@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PostForm from './PostForm';
-import Post from './Post';
+import PostForm from '../Post/PostForm';
+import Post from '../Post/Post';
 import './HomePage.css';
 import axios from 'axios';
 
@@ -52,7 +52,7 @@ class HomePage extends Component {
             break;
           }
     }
-    //call axios delete 
+    //call axios delete
     var send = {
       postid : PID
     }
@@ -67,7 +67,7 @@ class HomePage extends Component {
   //TODO: send posts to backend database
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
-      
+
       console.log(this.state.posts);
       //set format for the sending data
       const data_send = {
@@ -90,7 +90,7 @@ class HomePage extends Component {
           //   Posttime: newPost.time,
           //   postContent: newPost.content,
           //   comments: newPost.comments,
-          //   postid: temp 
+          //   postid: temp
           // }
           // newPosts.unshift(newp);
           // this.setState({posts: newPosts});

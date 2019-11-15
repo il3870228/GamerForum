@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import HomePage from "./components/HomePage";
-import SearchPage from './components/SearchPage';
+import HomePage from "./components/HomePage/HomePage";
+import SearchPage from './components/Search/SearchPage';
 import { Menu, Layout} from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'

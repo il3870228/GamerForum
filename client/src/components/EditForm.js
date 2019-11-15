@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-//import Form from 'react-bootstrap/Form';
-//import Button from 'react-bootstrap/Button';
 import { Form, Button } from 'antd';
 import 'antd/dist/antd.css';
 import TextArea from "antd/lib/input/TextArea";
-import './FormButton.css';
 class EditForm extends Component {
   constructor(props) {
       super(props);

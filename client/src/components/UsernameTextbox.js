@@ -5,7 +5,6 @@ import { Form, Button } from 'antd';
 import 'antd/dist/antd.css';
 import TextArea from "antd/lib/input/TextArea";
 import moment from 'moment';
-import './FormButton.css';
 class PostForm extends Component {
   constructor(props) {
       super(props);
@@ -29,7 +28,7 @@ class PostForm extends Component {
                 value={this.state.value}
             />
             <Button
-                type="primary" 
+                type="primary"
                 htmlType="submit"
                 onClick={this.handleSubmit}
             >
