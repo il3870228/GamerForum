@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import HomePage from "./components/HomePage/HomePage";
 import SearchPage from './components/Search/SearchPage';
+import LoginForm from './components/Login/LoginForm';
+import SignUpForm from './components/Login/SignUpForm';
+import LoginSignUpPage from './components/Login/LoginSignUpPage';
 import { Menu, Layout} from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
@@ -20,9 +23,10 @@ class App extends Component {
   }
 
   render() {
-    //return <HomePage/>;
-    var renderPage = this.state.pageIdx === "0" ? <HomePage/> : <SearchPage/>
+    //var renderPage = this.state.pageIdx === "0" ? <HomePage/> : <SearchPage/>
     return (
+      <LoginSignUpPage/>
+    /*
     <div>
       <Layout>
         <Header>
@@ -48,6 +52,7 @@ class App extends Component {
         </Content>
       </Layout>
     </div>
+    */
     );
   }
 }
