@@ -51,10 +51,10 @@ con.connect(function(err) {
 
 
 var express = require('express');
-var cors = require('cors');
+var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
 
-app.use(cors());
+app.use(cors()); // Leo Lee's suggestion
 app.get('*',(req,res)=>{
 	res.send('success mee');
 });
@@ -85,6 +85,71 @@ app.post('/api*',function(req,res,next){
 	console.log(req.body);
 	next();
 });
+
+
+/********************************/
+// login 
+// status 1 for success. 0 for failure with message
+app.post('/api/login',function(req,res,next){
+	console.log('login session is called');
+	// req.body = {username, password}
+	// return value is array of JSON objects
+	let table = 'USER';
+	let sql_login = `select * from ${table} where username = \'${req.body.username}\'`;
+	console.log(sql_login);
+	con.query(sql_login, (err, result, fields) => {
+		let login_state = {status:0,message:"Login Successful"}
+		// if there is no username match 
+		if (result.length == 0){
+			login_state.status = 0
+			login_state.message = `There is no user named ${req.body.username}`;
+			res.send(login_state);
+			return;
+		}
+		// user exists. password no match
+		else if (result[0].password != req.body.password){
+			login_state.status = 0
+			login_state.message = `Password is not a match for user: ${req.body.username}`;
+			res.send(login_state);
+			return;
+		}
+		// login successful.
+		else {
+			login_state.status = 1
+			// login message doesn't matter at this point.
+			res.send(login_state);
+			return;
+		}
+	});
+})
+
+// register: return true when successful, false when failure.
+// given email, username, password
+app.post('/api/register',function(req, res, next){
+	console.log('register start');
+	// check if username already there
+	let table = 'USER';
+	let sql_register = `select * from ${table} where usernam=\'${req.body.username}\'`;
+	con.query(sql_register,(err,result,fields)=>{
+		// check if username already there
+		if (result.length != 0){
+			res.send(false);
+			return;
+		}
+		// username available
+		else {
+			let table = 'USER'
+			let sql_register_insert = `insert into ${table}(username, email, password) values (\'${req.body.username}\',\'${req.email}\',\'${req.body.password}\')`;
+			con.query(sql_register_insert, (err,result,fields)=>{
+				// register should be successful
+				res.send(true);
+				return
+			});
+		}
+	});
+});
+
+/********************************/
 
 /*saving post; */
 var post_save = function(req,res,next){
