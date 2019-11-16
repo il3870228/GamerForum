@@ -2,25 +2,25 @@ import React, { Component } from "react";
 import { Form, Button, Icon, Input } from 'antd';
 import 'antd/dist/antd.css';
 import './Login.css';
+
 class LoginForm extends Component {
   constructor(props) {
       super(props);
       this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleSubmit(event)  {
       console.log('this.props: ', this.props);
       this.props.form.validateFields((err, values) => {
         if (!err) {
           console.log('Inside handleSubmit: values in form: ', values);
-
+          this.props.loggedIn(values.username, values.password);
         }
-      })
-
+      });
   }
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    console.log('this.props: ', this.props);
     return (
         <Form onSubmit={this.handleSubmit} className='login-form'>
           <Form.Item>

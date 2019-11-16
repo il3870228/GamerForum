@@ -15,6 +15,7 @@ class SignUpForm extends Component {
       this.props.form.validateFields((err, values) => {
         if (!err) {
           console.log('Inside handleSubmit: values in form: ', values);
+          this.props.loggedIn(values.username, values.password);
         }
       })
   }
@@ -31,7 +32,7 @@ class SignUpForm extends Component {
   compareToFirstPassword(rule, value, callback) {
     const { form } = this.props;
     console.log('compareToFirstPassword rule: ', rule, '; value: ', value, '; callback: ', callback);
-    if (value && value != form.getFieldValue('password')) {
+    if (value && value !== form.getFieldValue('password')) {
       callback('Two passwords are inconsistent');
     } else {
       callback();
