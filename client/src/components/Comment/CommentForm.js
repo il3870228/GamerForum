@@ -21,7 +21,7 @@ class CommentForm extends Component {
   handleSubmit(event)  {
       console.log('handleSubmit event: ', event);
       var curTime = moment().format('YYYY-MM-DD HH:mm:ss');
-      var p = {username: "Alex", time: curTime, content: this.state.value}
+      var p = {time: curTime, content: this.state.value}
       this.props.onComment(p);
   }
 
@@ -34,8 +34,8 @@ class CommentForm extends Component {
                 onChange={this.handleChange}
                 value={this.state.value}
             />
-            <Button 
-                type="primary" 
+            <Button
+                type="primary"
                 htmlType="submit"
                 onClick={this.handleSubmit}
             >

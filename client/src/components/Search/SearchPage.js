@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SearchForm from "./SearchForm";
-import '../HomePage/HomePage.css';
+import '../Forum/Forum.css';
 import axios from 'axios';
 import SearchResultPost from "./SearchResultPost";
 const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"

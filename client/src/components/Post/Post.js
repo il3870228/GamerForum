@@ -81,10 +81,9 @@ class Post extends Component {
 		//call post on axios
 		//get comment id
 		var newC = {
-			username: c.username,
+			username: this.props.viewerUsername,
 			time: c.time,
 			content: c.content,
-			// comments: c.comments,
 			postid: this.state.postid
 		  }
 		console.log("comment send ",newC)

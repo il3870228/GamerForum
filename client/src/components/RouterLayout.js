@@ -1,29 +1,24 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import HomePage from "./HomePage/HomePage";
+import Forum from "./Forum/Forum";
 import SearchPage from './Search/SearchPage';
+import { Redirect } from 'react-router-dom';
 import { Menu, Layout} from 'antd';
 import 'antd/dist/antd.css';
 const {Header, Content} = Layout;
 class RouterLayout extends Component {
-  /*
   constructor(props){
 		super(props);
-		this.state = {
-      username: this.props.location.state.username
-      password: this.props.location.state.password
-		}
 	}
-  */
   render() {
-    const renderedPage = this.props.location.pathname === '/Home' ? <HomePage/> : <SearchPage/>;
-    console.log(this.props.location.pathname);
-    return (
-    /*
-    if (this.state.username == null) {
-      <Redirect to={{pathname: '/'}}/>
+    if (this.props.location.state == null) {
+      return (<Redirect to={{pathname: '/'}}/>);
     }
-    */
+    const username = this.props.location.state.username;
+    //const password = this.props.location.state.username;
+    const renderedPage = this.props.location.pathname === '/Home' ? <Forum username={username}/> : <SearchPage/>;
+    console.log(username);
+    return (
     <div>
       <Layout>
         <Header>

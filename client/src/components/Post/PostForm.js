@@ -8,10 +8,9 @@ import moment from 'moment';
 class PostForm extends Component {
   constructor(props) {
       super(props);
-      this.state = {value: '', username:'Alex'};
+      this.state = {value: ''};
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
-	  this.handleChange_username = this.handleChange_username.bind(this);
   }
 
   handleChange(event) {
@@ -20,18 +19,10 @@ class PostForm extends Component {
     this.setState({value: event.target.value})
   }
 
-  handleChange_username(event) {
-    // console.log('handleChange event: ', event);
-	console.log(this)
-    this.setState({username: event.target.value})
-  }
-
   handleSubmit(event)  {
       console.log('handleSubmit event: ', event);
       var curTime = moment().format('YYYY-MM-DD HH:mm:ss');
-      var p = this.state.username === '' ?
-        {username: 'Delia', time: curTime, content: this.state.value, comments: []} :
-        {username: this.state.username, time: curTime, content: this.state.value, comments: []}
+      const p = {time: curTime, content: this.state.value, comments: []};
       this.props.onSubmitPost(p);
   }
 
@@ -39,13 +30,6 @@ class PostForm extends Component {
     return (
         <div>
         <Form.Item>
-			<TextArea
-                rows={1}
-				username={this.state.username}
-                // placeholder="Enter username"
-				onChange = {this.handleChange_username}
-				placeholder = {this.state.username}
-			/>
             <TextArea
                 rows={4}
                 onChange={this.handleChange}
