@@ -1,55 +1,72 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Forum from "./Forum/Forum";
+import GamePage from "./GamePage/GamePage";
 import SearchPage from './Search/SearchPage';
 import { Redirect } from 'react-router-dom';
-import { Menu, Layout} from 'antd';
+import { Menu, Layout } from 'antd';
 import 'antd/dist/antd.css';
-const {Header, Content} = Layout;
+const { Header, Content } = Layout;
 class RouterLayout extends Component {
-  constructor(props){
-		super(props);
-	}
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    if (this.props.location.state == null) {
-      return (<Redirect to={{pathname: '/'}}/>);
+    console.log('this.props.location: ', this.props.location);
+    if (this.props.location.state.username === null) {
+      return (<Redirect to={{ pathname: '/' }} />);
     }
     const username = this.props.location.state.username;
     //const password = this.props.location.state.username;
-    const renderedPage = this.props.location.pathname === '/Home' ? <Forum username={username}/> : <SearchPage/>;
-    console.log(username);
+    const pathName = this.props.location.pathname;
+    console.log('pathname: ', pathName);
+    let renderedPage;
+    if (pathName === '/Overwatch') {
+      renderedPage = <GamePage username={username} game='Overwatch' />
+      console.log('ow')
+    } else if (pathName === '/PUBG') {
+      renderedPage = <GamePage username={username} game='PUBG' />
+      console.log('pubg')
+    } else {
+      renderedPage = <SearchPage />
+      console.log('search page')
+    }
     return (
-    <div>
-      <Layout>
-        <Header>
-          <Menu
+      <div>
+        <Layout>
+          <Header>
+            <Menu
               onClick={this.handleClick}
               theme="dark"
               mode="horizontal"
               selectedKeys={[this.props.location.pathname]}
-              style={{lineHeight: '64px'}}
+              style={{ lineHeight: '64px' }}
             >
-              <Menu.Item key='/Home'>
-                Home
-                <Link to='/Home'/>
+              <Menu.Item key='/Overwatch'>
+                Overwatch
+                <Link to={{ pathname: '/Overwatch', state: { username: username } }} />
+              </Menu.Item>
+              <Menu.Item key='/PUBG'>
+                PUBG
+                <Link to={{ pathname: '/PUBG', state: { username: username } }} />
               </Menu.Item>
               <Menu.Item key='/Search'>
                 Search
-                <Link to='/Search'/>
+                <Link to={{ pathname: '/Search', state: { username: username } }} />
               </Menu.Item>
               <Menu.Item key='/'>
                 Sign out
-                <Link to='/'/>
+                <Link to='/' />
               </Menu.Item>
-          </Menu>
-        </Header>
-      </Layout>
-      <Layout className='lc'>
-        <Content className='mt'>
-          {renderedPage}
-        </Content>
-      </Layout>
-    </div>
+            </Menu>
+          </Header>
+        </Layout>
+        <Layout className='lc'>
+          <Content className='mt'>
+            {renderedPage}
+          </Content>
+        </Layout>
+      </div>
     );
   }
 }

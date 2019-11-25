@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import RecInputForm from './RecInputForm';
 import RecOutputForm from './RecOutputForm';
+import './Rec.css'
 
 class Recommendations extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Recommendations extends Component {
     //TODO: Replace this with results (a list of potential friends) from the advance function 
     const testRecResults = ['John123', 'Josh456', 'Emma789', 'Roman1000'];
     return (
-        <div>
+        <div className='f1'>
             {this.state.DisplayInputForm ? 
                 <RecInputForm game={this.props.game} onSubmit={this.onSubmitInputForm}/> : 
                 <RecOutputForm game={this.props.game} onSubmit={this.onSubmitOutputForm} recResults={testRecResults}/>
