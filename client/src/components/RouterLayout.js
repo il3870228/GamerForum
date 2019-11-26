@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import GamePage from "./GamePage/GamePage";
 import SearchPage from './Search/SearchPage';
+import Home from './Home/Home';
 import { Redirect } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
 import 'antd/dist/antd.css';
@@ -27,6 +28,9 @@ class RouterLayout extends Component {
     } else if (pathName === '/PUBG') {
       renderedPage = <GamePage username={username} game='PUBG' />
       console.log('pubg')
+    } else if (pathName === '/Home') {
+      renderedPage = <Home username={username}/>
+      console.log('Home');
     } else {
       renderedPage = <SearchPage />
       console.log('search page')
@@ -42,6 +46,10 @@ class RouterLayout extends Component {
               selectedKeys={[this.props.location.pathname]}
               style={{ lineHeight: '64px' }}
             >
+              <Menu.Item key='/Home'>
+                Home
+                <Link to={{ pathname: '/Home', state: { username: username } }} />
+              </Menu.Item>
               <Menu.Item key='/Overwatch'>
                 Overwatch
                 <Link to={{ pathname: '/Overwatch', state: { username: username } }} />

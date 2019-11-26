@@ -1,0 +1,21 @@
+.owRank {
+    float: left;
+    width: 33%;
+}
+
+.PUBGRank {
+    float: right;
+    width: 33%;    
+}
+
+.PossibleFriends {
+    width: 33%;
+}
+
+.home {
+}
+
+.column {
+    float: left;
+    width: 33%;
+}
