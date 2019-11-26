@@ -44,6 +44,9 @@ class RecInputForm extends Component {
          },
       }
     }
+    const owRoles = ['Damage', 'Tank', 'Support'];
+    const PUBGRoles = ['Leader', 'Sniper', 'Fragger', 'Support', 'Driver', 'Explorer'];
+    const roles = this.props.game === 'Overwatch' ? owRoles : PUBGRoles;
     return (
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className='rec-input-form'>
           <Form.Item label="Ranking">
@@ -73,9 +76,7 @@ class RecInputForm extends Component {
                 placeholder="Select your position"
                 onChange={this.handlePositionChange}
               >
-                <Option value='Tank'>Tank</Option>
-                <Option value='Damage'>Damage</Option>
-                <Option value='Support'>Support</Option> 
+              {roles.map(role => <Option value={role}>{role}</Option>)}
               </Select>
             )}
           </Form.Item>
