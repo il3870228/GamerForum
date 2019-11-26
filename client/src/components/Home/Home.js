@@ -11,8 +11,8 @@ class Home extends Component {
         const username = this.props.username;
         console.log(username);
         return (
-            <div className='column'>
-                <div className='owRank'>
+            <div className='home'>
+                <div className='column'>
                     <RankBoard game='Overwatch'/>
                 </div>
                 <div className='column'>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Button, Checkbox, Row, List } from 'antd';
 import 'antd/dist/antd.css';
+import './PossibleFriends.css';
 class PossibleFriends extends Component {
     constructor(props) {
         super(props);
@@ -13,7 +14,7 @@ class PossibleFriends extends Component {
 
     updateFriendList() {
         //get new list of friends here
-        this.setState({ possibleFriends: ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy']});
+        this.setState({ possibleFriends: ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy'] });
     }
 
     handleSubmit(e) {
@@ -33,11 +34,11 @@ class PossibleFriends extends Component {
         console.log('this.state.possibleFriends: ', this.state.possibleFriends);
         const { getFieldDecorator } = this.props.form;
         return (
-            <div>
-                <Form onSubmit={this.handleSubmit} className='rec-output-form'>
-                    <Form.Item>
+            <div className='margins'>
+                <Form onSubmit={this.handleSubmit} className='pf'>
+                    <Form.Item className='pf'>
                         {getFieldDecorator('checkbox-group')(
-                            <Checkbox.Group>
+                            <Checkbox.Group className='pf'>
                                 <List
                                     size="large"
                                     header={<div>Add Friends!</div>}
@@ -56,13 +57,13 @@ class PossibleFriends extends Component {
                             </Checkbox.Group>,
                         )}
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item className='pf-button'>
                         <Button type="primary" htmlType="submit" className='recommendation-button'>
                             Add
-                        </Button>
+                    </Button>
                     </Form.Item>
                 </Form>
-            </div >
+            </div>
         );
     }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import 'antd/dist/antd.css';
 import { List } from 'antd';
+import './PossibleFriends.css';
 
 class RankBoard extends Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class RankBoard extends Component {
     }
     render() {
         return (
-            <div>
+            <div className='margins'>
                 <List
                     size="large"
                     header={<div>{this.props.game}</div>}

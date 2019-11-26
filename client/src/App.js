@@ -11,7 +11,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path='/' component={LoginSignUpPage} />
-          <Route exact path='/Home' component={Home}/>
+          <Route exact path='/Home' component={RouterLayout}/>
           <Route path='/Overwatch' component={RouterLayout}/>
           <Route path='/PUBG' component={RouterLayout}/>
           <Route path='/Search' component={RouterLayout}/>
