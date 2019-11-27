@@ -17,13 +17,14 @@ class RankBoard extends Component {
         this.setState({ ranking: ['Julie', 'John', 'Josh', 'Roman', 'Emma']});
     }
     render() {
+        const rankWithIdx = this.state.ranking.map((val, index) => ((index+1) + ". " + val));
         return (
             <div className='margins'>
                 <List
                     size="large"
                     header={<div>{this.props.game}</div>}
                     bordered
-                    dataSource={this.state.ranking}
+                    dataSource={rankWithIdx}
                     renderItem={item => <List.Item>{item}</List.Item>}
                 />
             </div>

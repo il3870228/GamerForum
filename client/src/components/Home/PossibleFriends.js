@@ -2,69 +2,70 @@ import React, { Component } from "react";
 import { Form, Button, Checkbox, Row, List } from 'antd';
 import 'antd/dist/antd.css';
 import './PossibleFriends.css';
+const testFriends1 = ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy'];
+const testFriends2 = ['Xavier', 'Belle', 'Sana', 'Lazzaro', 'Joan'];
+const defaultCheckValues = [];
 class PossibleFriends extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            possibleFriends: ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy']
+            possibleFriends: testFriends1,
+            selectedFriends: defaultCheckValues,
         };
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateFriendList = this.updateFriendList.bind(this);
     }
 
-    updateFriendList() {
-        //get new list of friends here
-        this.setState({ possibleFriends: ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy'] });
+    handleChange(checkedValues) {
+        console.log('handleChange, checkedValues: ', checkedValues);
+        this.setState({ selectedFriends: checkedValues });
     }
 
-    handleSubmit(e) {
+    updateFriendList() {
+        //get new list of friends here
+        this.setState({ possibleFriends: ['Joseph', 'Alice', 'Kevin', 'Lucy', 'Ted', 'Amy'] });
+    }
+
+    handleSubmit() {
         console.log('handleSubmit in PossibleFriends');
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Possible Friends values: ', values);
-                //values.checkbox-group is an array of names of added friends
-                //values['checkbox-group']
-                console.log(values['checkbox-group']);
-                this.updateFriendList();
-            }
+        const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
+        this.setState({
+            possibleFriends: nextFriends,
+            selectedFriends: defaultCheckValues,
         });
     }
 
     render() {
         console.log('this.state.possibleFriends: ', this.state.possibleFriends);
-        const { getFieldDecorator } = this.props.form;
+        console.log('this.state.selectedFriends: ', this.state.selectedFriends);
         return (
             <div className='margins'>
-                <Form onSubmit={this.handleSubmit} className='pf'>
-                    <Form.Item className='pf'>
-                        {getFieldDecorator('checkbox-group')(
-                            <Checkbox.Group className='pf'>
-                                <List
-                                    size="large"
-                                    header={<div>Add Friends!</div>}
-                                    bordered
-                                    dataSource={this.state.possibleFriends}
-                                    renderItem={
-                                        item =>
-                                            <List.Item>
-                                                <Checkbox value={item}>
-                                                    {item}
-                                                </Checkbox>
-                                            </List.Item>
-                                    }
-                                >
-                                </List>
-                            </Checkbox.Group>,
-                        )}
-                    </Form.Item>
-                    <Form.Item className='pf-button'>
-                        <Button type="primary" htmlType="submit" className='recommendation-button'>
-                            Add
-                    </Button>
-                    </Form.Item>
-                </Form>
+                <Checkbox.Group
+                    className='pf'
+                    onChange={this.handleChange}
+                    value={this.state.selectedFriends}
+                >
+                    <List
+                        size="large"
+                        header={<div>Add Friends!</div>}
+                        bordered
+                        dataSource={this.state.possibleFriends}
+                        renderItem={
+                            item =>
+                                <List.Item>
+                                    <Checkbox value={item}>
+                                        {item}
+                                    </Checkbox>
+                                </List.Item>
+                        }
+                    />
+                </Checkbox.Group>
+                <Button type="primary" className='pf-button' onClick={this.handleSubmit}>
+                    Add
+                </Button>
             </div>
         );
     }
 }
-export default Form.create({ name: 'PossibleFriends' })(PossibleFriends);
+export default PossibleFriends;

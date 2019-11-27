@@ -7,6 +7,7 @@ class Home extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         const username = this.props.username;
         console.log(username);
@@ -16,7 +17,7 @@ class Home extends Component {
                     <RankBoard game='Overwatch'/>
                 </div>
                 <div className='column'>
-                    <PossibleFriends username={username} />
+                    <PossibleFriends key={username} username={username} />
                 </div>
                 <div className='column'>
                     <RankBoard game='PUBG'/>

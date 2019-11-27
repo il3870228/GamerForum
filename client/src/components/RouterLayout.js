@@ -14,6 +14,10 @@ class RouterLayout extends Component {
 
   render() {
     console.log('this.props.location: ', this.props.location);
+    if (this.props.location.state == null) {
+      console.log('this.props.location.state: ', this.props.location.state);
+      return (<Redirect to={{ pathname: '/' }} />);
+    }
     if (this.props.location.state.username === null) {
       return (<Redirect to={{ pathname: '/' }} />);
     }

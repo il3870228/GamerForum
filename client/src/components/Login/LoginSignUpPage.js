@@ -19,7 +19,7 @@ class LoginSignUpPage extends Component {
   loggedIn(username, password) {
     console.log('username: ', username, ' password: ', password);
     this.props.history.push({
-      pathname: '/Overwatch',
+      pathname: '/Home',
       state: {
         username: username,
         password: password,
