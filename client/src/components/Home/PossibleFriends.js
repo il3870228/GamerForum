@@ -14,17 +14,11 @@ class PossibleFriends extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.updateFriendList = this.updateFriendList.bind(this);
     }
 
     handleChange(checkedValues) {
         console.log('handleChange, checkedValues: ', checkedValues);
         this.setState({ selectedFriends: checkedValues });
-    }
-
-    updateFriendList() {
-        //get new list of friends here
-        this.setState({ possibleFriends: ['Joseph', 'Alice', 'Kevin', 'Lucy', 'Ted', 'Amy'] });
     }
 
     handleSubmit() {
