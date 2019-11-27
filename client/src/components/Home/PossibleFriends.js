@@ -22,7 +22,9 @@ class PossibleFriends extends Component {
     }
 
     handleSubmit() {
+        //TODO: User add a list of new friends: Should send selectedFriends to backend
         console.log('handleSubmit in PossibleFriends');
+        //TODO: nextFriends should be replace by a new list of recommended friends from the backend
         const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
         this.setState({
             possibleFriends: nextFriends,

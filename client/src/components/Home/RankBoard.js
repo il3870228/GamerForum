@@ -13,7 +13,7 @@ class RankBoard extends Component {
     }
 
     updateRanks() {
-        //Should use this.props.game to get ranking from back end
+        //TODO: Should use this.props.game to get ranking from back end
         this.setState({ ranking: ['Julie', 'John', 'Josh', 'Roman', 'Emma']});
     }
     render() {
