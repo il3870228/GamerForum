@@ -1,23 +1,27 @@
 import React, { Component } from "react";
-import PostForm from './PostForm';
-import Post from './Post';
-import './HomePage.css';
+import PostForm from '../Post/PostForm';
+import Post from '../Post/Post';
+import './Forum.css';
 import axios from 'axios';
 
 const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 
-class HomePage extends Component {
+class Forum extends Component {
   constructor(props) {
       super(props);
-      this.state = {posts: [], value: ''};
+      this.state = {
+        posts: [],
+        value: '',
+        username: this.props.username,
+      };
       this.onSubmitPost = this.onSubmitPost.bind(this);
       this.onDeletePost = this.onDeletePost.bind(this);
       this.getAllPosts = this.getAllPosts.bind(this);
-
+ 
   }
 
   componentDidMount() {
-    console.log("inside homepage component did mount method");
+    console.log("inside forum component did mount method");
     //TODO: get data from back end and set state
 
     //get all post
@@ -52,7 +56,7 @@ class HomePage extends Component {
             break;
           }
     }
-    //call axios delete 
+    //call axios delete
     var send = {
       postid : PID
     }
@@ -67,12 +71,11 @@ class HomePage extends Component {
   //TODO: send posts to backend database
   onSubmitPost(newPost)  {
       console.log('onSubmitPost', newPost);
-      var newPosts = this.state.posts;
-      
+
       console.log(this.state.posts);
       //set format for the sending data
       const data_send = {
-        username: newPost.username,
+        username: this.state.username,
         time: newPost.time,
         content: newPost.content,
         comments: newPost.comments
@@ -91,7 +94,7 @@ class HomePage extends Component {
           //   Posttime: newPost.time,
           //   postContent: newPost.content,
           //   comments: newPost.comments,
-          //   postid: temp 
+          //   postid: temp
           // }
           // newPosts.unshift(newp);
           // this.setState({posts: newPosts});
@@ -104,9 +107,9 @@ class HomePage extends Component {
     return (
         <div className='outer'>
         <PostForm onSubmitPost={this.onSubmitPost}/>
-        {this.state.posts.map((p) => <Post key={p.postid+"clength: "+p.comments.length} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost} getAllPosts={this.getAllPosts}/>)}
+        {this.state.posts.map((p) => <Post key={p.postid+"clength: "+p.comments.length} viewerUsername={this.state.username} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} comments={p.comments} onDeletePost={this.onDeletePost} getAllPosts={this.getAllPosts}/>)}
         </div>
     );
   }
 }
-export default HomePage;
+export default Forum;

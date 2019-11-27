@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
-import CommentForm from "./CommentForm";
-import EditForm from "./EditForm";
-import CommentPost from "./CommentPost";
+import CommentForm from "../Comment/CommentForm";
+import EditForm from "../EditForm";
+import CommentPost from "../Comment/CommentPost";
 import './Post.css';
 
 import axios from 'axios';
@@ -43,7 +43,7 @@ class Post extends Component {
 			console.log("updated post ", res.data)
 		})
 		this.setState({onEdit: false, postContent: updatedContent});
-		
+
 	}
 
 	onClickEdit() {
@@ -78,21 +78,19 @@ class Post extends Component {
 	//TODO: send comment to backend database
 	onComment(c) {
 		console.log('onComment c: ', c);
-		var newComments = this.state.comments;
 		//call post on axios
 		//get comment id
 		var newC = {
-			username: c.username,
+			username: this.props.viewerUsername,
 			time: c.time,
 			content: c.content,
-			// comments: c.comments,
 			postid: this.state.postid
 		  }
 		console.log("comment send ",newC)
 		axios.post(home_url + "api/post_comment", newC)
 		.then(res => {
 			console.log("post comment success")
-			
+
 			this.props.getAllPosts()
 		})
 		// newComments.unshift(newC);

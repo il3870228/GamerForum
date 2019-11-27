@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
-import EditForm from './EditForm';
+import EditForm from '../EditForm';
 import axios from 'axios';
 const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
 class CommentPost extends Component {
@@ -44,7 +44,7 @@ class CommentPost extends Component {
 	}
 
 	onClickDelete() {
-		
+
 		this.props.onDeleteComment(this.state.commentid);//todo here
 	}
 

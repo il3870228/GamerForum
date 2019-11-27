@@ -1,0 +1,11 @@
+.rec {
+    float: left;
+    width: 33%;
+    margin-left: 20px;
+    border: 2px solid rgb(82, 133, 180);    
+}
+
+.forum {
+    float: right;
+    width: 60%;
+}

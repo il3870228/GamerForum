@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Input } from 'antd';
+//import Form from 'react-bootstrap/Form';
+//import Button from 'react-bootstrap/Button';
+import { Form, Button } from 'antd';
 import 'antd/dist/antd.css';
-class SearchForm extends Component {
+import TextArea from "antd/lib/input/TextArea";
+import moment from 'moment';
+class CommentForm extends Component {
   constructor(props) {
       super(props);
       this.state = {value: ''};
@@ -16,28 +20,30 @@ class SearchForm extends Component {
 
   handleSubmit(event)  {
       console.log('handleSubmit event: ', event);
-      this.props.onSearch(this.state.value);
+      var curTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      var p = {time: curTime, content: this.state.value}
+      this.props.onComment(p);
   }
 
   render() {
     return (
         <div>
         <Form.Item>
-            <Input
+            <TextArea
+                rows={4}
                 onChange={this.handleChange}
                 value={this.state.value}
-                placeholder="Enter username"
             />
-            <Button 
-                type="primary" 
+            <Button
+                type="primary"
                 htmlType="submit"
                 onClick={this.handleSubmit}
             >
-                Search
+                Comment
             </Button>
         </Form.Item>
         </div>
     );
   }
 }
-export default SearchForm;
+export default CommentForm;
