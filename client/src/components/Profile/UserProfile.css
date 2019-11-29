@@ -1,0 +1,17 @@
+.personalInfo {
+    margin: auto;
+    width: 600px;
+}
+
+.infoStyle {
+    font-size: medium;
+}
+
+.FriendsHeader {
+    color: black;
+}
+
+.alignStyle{
+    float: left;
+    width: 50%;
+}

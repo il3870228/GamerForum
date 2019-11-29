@@ -15,6 +15,7 @@ class App extends Component {
           <Route path='/Overwatch' component={RouterLayout}/>
           <Route path='/PUBG' component={RouterLayout}/>
           <Route path='/Search' component={RouterLayout}/>
+          <Route path='/Profile' component={RouterLayout}/>
         </Switch>
       </Router>
     );
