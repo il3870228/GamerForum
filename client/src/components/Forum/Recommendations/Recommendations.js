@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import RecInputForm from './RecInputForm';
 import RecOutputForm from './RecOutputForm';
 import './Rec.css'
+import axios from 'axios';
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 const testRecResults = ['John123', 'Josh456', 'Emma789', 'Roman1000'];
+
 class Recommendations extends Component {
   constructor(props) {
       super(props);
@@ -20,12 +23,24 @@ class Recommendations extends Component {
     // Send to back-end: 
     // if()
     // TODO: Make sure this.props.username is passed down
-    // {
-    //     game: this.props.game,
-    //     username: this.props.username,
-    //     ranking: values.ranking,
-    //     role: values.confirm,
-    // }
+    var temp;
+    if(this.props.game == "Overwatch"){
+        temp = 0
+    }
+    else{
+        temp = 1
+    }
+    const send = {
+        game: temp,
+        username: this.props.username,
+        ranking: values.ranking,
+        role: values.confirm
+    }
+    console.log("recommend info: ", send)
+    axios.post(home_url + "api/recommend", send)
+    .then(res=>{
+      console.log("recommend data", res.data)
+    })
     // get from back-end: 
     // {
     //     recFriend: a list of strings
