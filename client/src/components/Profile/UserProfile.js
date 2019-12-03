@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import 'antd/dist/antd.css';
 import { Descriptions, Rate, Table } from 'antd';
 import './UserProfile.css';
+import axios from 'axios';
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 const tableColumns = [
 	{
 		title: 'Friend',
@@ -35,6 +37,19 @@ class UserProfile extends Component {
 		// {
 		// 	username: this.props.username
 		// }
+		const send = {
+			username: this.props.username
+		}
+		axios.post(home_url + "api/profile", send)
+		.then(res=>{
+			console.log("profile response : ", res.data)
+			this.setState({
+				email: res.data.email,
+				friends: res.data.friends,//["Roman1000", "Lucy", "Kevin", "Lazzaro", "Sana2000"],
+				friendsRating: res.data.friendsRating,//[3, 3, 4, 5, 0],
+				password: res.data.password//"test_password123"
+			});
+		})
 		// Get from back-end: 
 		// {
 		// 	email: string,
@@ -43,12 +58,7 @@ class UserProfile extends Component {
 		// 	friendsRating: a list of int,
 		// }
 		// TODO: modify below
-		this.setState({
-			email: "test_email@gmail.com",
-			friends: ["Roman1000", "Lucy", "Kevin", "Lazzaro", "Sana2000"],
-			friendsRating: [3, 3, 4, 5, 0],
-			password: "test_password123"
-		});
+		
 	}
 
 	handleChange(value, index) {
@@ -64,6 +74,16 @@ class UserProfile extends Component {
 		// 	username: this.props.username,
 		// 	friendsRating: newFriendsRating
 		// }
+		const send = {
+			username: this.props.username,
+			friendsRating: newFriendsRating
+		}
+		console.log('rate data send: ',send)
+		axios.post(home_url + "api/profile/rating", send)
+		.then(res=>{
+			console.log("rate response : ", res.data)
+		})
+
 	}
 
 	render() {
