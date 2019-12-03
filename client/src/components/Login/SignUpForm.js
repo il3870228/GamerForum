@@ -1,11 +1,15 @@
 import React, { Component } from "react";
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import './Login.css';
 class SignUpForm extends Component {
   constructor(props) {
       super(props);
-      this.state = {confirmDirty: false};
+      this.state = {
+        confirmDirty: false, 
+        LogInErrorDisplay: false,
+        LogInError: "",
+      };
       this.handleSubmit = this.handleSubmit.bind(this);
       this.validateToNextPassword = this.validateToNextPassword.bind(this);
       this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
@@ -23,7 +27,7 @@ class SignUpForm extends Component {
           // }
           // get error/success message from back-end
           // if error: 
-          //   TODO: DO SOMETHING!!
+          //   set state on LogInErrorDisplay and LogInError
           // if success: 
           this.props.loggedIn(values.username, values.password);
         }
@@ -78,6 +82,7 @@ class SignUpForm extends Component {
          },
       }
     }
+    const logInErrorAlert = this.state.LogInErrorDisplay ? <Alert message={this.state.LogInError} type="error" /> : null;
     return (
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className='sign-up-form'>
           <Form.Item label="Email">
@@ -143,6 +148,7 @@ class SignUpForm extends Component {
               Sign Up
             </Button>
           </Form.Item>
+          {logInErrorAlert}
         </Form>
     );
   }
