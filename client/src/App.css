@@ -1,7 +1,26 @@
 .mt {
-    margin-top: 64px
+    margin-top: 64px;
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
 .lc {
-    background-color: white
+    background-image: url('pubg4.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    background-blend-mode: darken;
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    height: 100vh;
+}
+
+.nmt {
+    margin-top: 64px;
+}
+
+.nlc {
+    background-color: white;
 }
