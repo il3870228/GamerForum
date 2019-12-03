@@ -78,7 +78,8 @@ class Forum extends Component {
         username: this.state.username,
         time: newPost.time,
         content: newPost.content,
-        comments: newPost.comments
+        comments: newPost.comments,
+        game: this.props.game,
       };
       console.log('data send', data_send);
       // console.log('finish debug');
