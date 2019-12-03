@@ -14,7 +14,7 @@ class GamePage extends Component {
         return (
             <div>
                 <div className='rec'>
-                    <Recommendations game={game} />
+                    <Recommendations game={game} username={username}/>
                 </div>
                 <div className='forum'>
                     <Forum username={username} />
