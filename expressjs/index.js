@@ -241,6 +241,7 @@ app.post('/api/recommend', (req,res,next)=>{
     let ranking = parseInt(req.body.ranking)
     let role = req.body.role
     let userid = -1
+    console.log("game id is " + game)
     con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
         userid = value[0].userid
         // check if existent
@@ -256,12 +257,20 @@ app.post('/api/recommend', (req,res,next)=>{
         }
     }).then((resolved)=>{
         // only update
-        con.query_p(`update PLAYED set \`rank\` = ${ranking}, favoriteposition = ${role} where gameid = ${game} and userid = ${userid}`)
+        let sql = `update PLAYED set \`rank\` = ${ranking}, favoriteposition = \'${role}\' where gameid = ${game} and userid = ${userid}`
+        console.log(sql)
+        con.query_p(sql)
         console.log("recommendation updated!")
     }, (rejected)=>{
         // insert new 
-        con.query_p(`insert into PLAYED values (${game},${userid},\'${role}\',${ranking}),null`)
+        let sql = `insert into PLAYED values (${game},${userid},\'${role}\',${ranking},null)`
+        console.log(sql)
+        con.query_p(sql)
         console.log("recommendation inserted!")
+    }).then(()=>{
+        let a = 0
+    } , (err) => {
+        console.log(err)
     })
     
 })
