@@ -21,11 +21,14 @@ class Forum extends Component {
   }
 
   componentDidMount() {
+    const data_send = {
+      game: this.props.game,
+    };
     console.log("inside forum component did mount method");
     //TODO: get data from back end and set state
 
     //get all post
-    axios.post(home_url + "api/get")
+    axios.post(home_url + "api/get", data_send)
     .then(res =>{
       console.log("mount data", res.data)
       this.setState({posts: res.data});
