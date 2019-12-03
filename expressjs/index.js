@@ -272,29 +272,39 @@ app.post('/api/recommend', (req,res,next)=>{
     } , (err) => {
         console.log(err)
     })
-    
 })
 
 
-/*******************************SHOW CREATE TABLE mytable; show constraints*/
+/*SHOW CREATE TABLE mytable; show constraints*/
 
-/*saving post; */
+/*saving post; should be divided into PUBG and OVERWATCH */
 var post_save = function(req, res, next) {
-    console.log('more things connected');
-    let table = 'POST';
-    let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
-    console.log(sql);
-    con.query(sql, function(err, result, fields) {
-        // first query is done. second one
-    });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
-    });
-    res.send({ id: 1 });
+    // console.log('more things connected');
+    // let table = 'POST';
+    // let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
+    // console.log(sql);
+    // con.query(sql, function(err, result, fields) {
+    //     // first query is done. second one
+    // });
+    // let verify_sql = `select * from ${table}`
+    // con.query(verify_sql, function(err, result, fields) {
+    //     console.log(result);
+    // });
+    // res.send({ id: 1 });
+    let this_username = req.body.username 
+    let this_time = req.body.time
+    let this_userid = -1
+    let this_content = req.body.content 
+    let this_game = (req.body.game == 'PUBG')? 1:0
+    con.query_p(`select userid from USER where username = \'${this_username}\'`).then((value)=>{
+        this_userid = value[0].userid
+        con.query_p(`insert into POST(userid,time,content,gameid) values (${this_userid},\'${this_time}\',\'${this_content}\' , ${this_game})`)
+    }).then(()=>{
+        res.send({userid: this_userid, username: this_username})
+        console.log("post saved!!!!")
+    })
 
 };
-
 app.post('/api/post', post_save);
 
 /*saving comment*/
@@ -312,7 +322,16 @@ var comment_save = function(req, res, next) {
     });
     res.send({ "the freak?": 'hahahaha' });
 };
-app.post('/api/post_comment', comment_save);
+/* comments are connected to posts.  */
+app.post('/api/post_comment', (req,res,next)=>{
+    
+    let this_postid = req.body.postid 
+    let this_username = req.body.username
+    let this_userid = -1
+    let this_time = req.body.time
+    let this_content = req.body.content
+    
+});
 
 /*search*/
 var search = (req, res, next) => {
@@ -329,71 +348,34 @@ var search = (req, res, next) => {
 app.post('/api/search', search);
 
 /*get_all basic render functionality for post */
-get_all = (req, res, next) => {
+app.post('/api/get', (req,res,next)=>{
+    let this_posts = []
+    let this_comments = []
+    let this_game = (req.body.game == 'PUBG')? 1:0 // 1 for PUBG, 0 for Overwatch
 
-    /* start of get_call************************************/
-    var promise = new Promise((resolve, reject) => {
-        resolve(1);
-    })
-
-
-    var table = 'POST'
-    var comments = 'COMMENTS';
-    // using a promise to return values from callback function AND enforce order of execution
-    var promise = new Promise(function(resolve, reject) {
-        var sql = `select * from ${table} order by postid desc`
-        console.log(sql)
-        Promise.resolve().then(() => {
-            var posts = {}
-            con.query(sql, function(err, result) {
-                console.log('callback is called')
-                    // console.log(result)
-                posts = result;
-                for (var i in posts) {
-                    posts[i].comments = []
+    con.query_p(`select * from POST where gameid = ${this_game} order by postid desc`).then((value)=>{
+        this_posts = JSON.parse(JSON.stringify(value))
+        for (let i in this_posts){
+            this_posts[i].comments = []
+        }
+        console.log("comments field inserted into this_posts")
+        return con.query_p(`select * from COMMENTS order by commentid desc`)
+    }).then((value)=>{
+        this_comments = JSON.parse(JSON.stringify(value))
+    }).then(()=>{
+        for (let i in this_comments){
+            for (let j in this_posts){
+                if (this_comments[i].postid == this_posts[j].postid){
+                    this_posts[j].comments.push(this_comments[i])
+                    break
                 }
-                // get comments and concat
-                //console.log(posts)
-                resolve(posts)
-            })
-        })
+            }
+        }
+        console.log("render !!!!!!!!!!!!!!!")
+        console.log(this_posts)
+        res.send(this_posts)
     })
-
-    // actual 
-    promise.then((value) => {
-        console.log('promise 2')
-        get_comment(value)
-    })
-
-    function get_comment(posts) {
-        var sql = `select * from ${comments} order by commentid desc`
-        con.query(sql, function(err, result) {
-            /*posts still accessible*/
-            // console.log(result) 
-            for (var i in result) {
-                for (var j in posts) {
-                    if (result[i].postid == posts[j].postid) {
-
-                        let js_result = JSON.parse(JSON.stringify(result[i]))
-                            // console.log('pushed comment')
-                            // console.log(js_result)
-                        posts[j].comments.push(js_result)
-                        break
-                    }
-                } // eofl inner loop
-            } // eofl outer loop
-            console.log('end of get comment')
-            let posts_js = JSON.parse(JSON.stringify(posts))
-                // console.log(posts_js)
-            console.log('doomsday')
-                // console.log(posts_js[0])
-                /*because of the scope and stuff I need to res.send here?*/
-            res.send(posts_js)
-        })
-    }
-    /* end of get_call************************************/
-};
-app.post('/api/get', get_all);
+});
 
 
 /*delete post*/
@@ -512,3 +494,86 @@ PUT: modify some data with data enclosed
 DELETE: delete specified resource
 */
 console.log("start routine at " + myport);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////GARBAGE COLLECTION///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// get_all = (req, res, next) => {
+
+//     /* start of get_call************************************/
+//     var promise = new Promise((resolve, reject) => {
+//         resolve(1);
+//     })
+
+
+//     var table = 'POST'
+//     var comments = 'COMMENTS';
+//     // using a promise to return values from callback function AND enforce order of execution
+//     var promise = new Promise(function(resolve, reject) {
+//         var sql = `select * from ${table} order by postid desc`
+//         console.log(sql)
+//         Promise.resolve().then(() => {
+//             var posts = {}
+//             con.query(sql, function(err, result) {
+//                 console.log('callback is called')
+//                     // console.log(result)
+//                 posts = result;
+//                 for (var i in posts) {
+//                     posts[i].comments = []
+//                 }
+//                 // get comments and concat
+//                 //console.log(posts)
+//                 resolve(posts)
+//             })
+//         })
+//     })
+
+//     // actual 
+//     promise.then((value) => {
+//         console.log('promise 2')
+//         get_comment(value)
+//     })
+
+//     function get_comment(posts) {
+//         var sql = `select * from ${comments} order by commentid desc`
+//         con.query(sql, function(err, result) {
+//             /*posts still accessible*/
+//             // console.log(result) 
+//             for (var i in result) {
+//                 for (var j in posts) {
+//                     if (result[i].postid == posts[j].postid) {
+
+//                         let js_result = JSON.parse(JSON.stringify(result[i]))
+//                             // console.log('pushed comment')
+//                             // console.log(js_result)
+//                         posts[j].comments.push(js_result)
+//                         break
+//                     }
+//                 } // eofl inner loop
+//             } // eofl outer loop
+//             console.log('end of get comment')
+//             let posts_js = JSON.parse(JSON.stringify(posts))
+//                 // console.log(posts_js)
+//             console.log('doomsday')
+//                 // console.log(posts_js[0])
+//                 /*because of the scope and stuff I need to res.send here?*/
+//             res.send(posts_js)
+//         })
+//     }
+//     /* end of get_call************************************/
+// };
