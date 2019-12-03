@@ -119,6 +119,18 @@ app.post('/api/login', function(req, res, next) {
     })
 })
 
+
+
+app.post('/api/signup', (req,res,next)=>{
+    console.log('signup start')
+    var email = req.body.email
+    var username = req.body.username
+    var password = req.body.password
+    
+})
+
+
+
 // register: return true when successful, false when failure.
 // given email, username, password
 app.post('/api/register', function(req, res, next) {
