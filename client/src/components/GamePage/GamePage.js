@@ -17,7 +17,7 @@ class GamePage extends Component {
                     <Recommendations game={game} username={username}/>
                 </div>
                 <div className='forum'>
-                    <Forum username={username} />
+                    <Forum username={username} game={game}/>
                 </div>
             </div>
         );
