@@ -211,6 +211,29 @@ app.post('/api/profile/rating',(req,res,next)=>{
 })
 
 
+app.post('/api/toprank',(req,res,next)=>{
+    let game_id = req.body.game 
+    con.query_p(`\
+select u.username as username, p.rank \
+from PLAYED p inner join USER u on p.userid = u.userid \
+where gameid = ${game_id}  \
+order by p.rank desc \
+limit 5 \
+\
+`).then((value)=>{
+    let this_rank = []
+    let this_score = []
+    for (let i in value){
+        this_rank.push(value[i].username)
+        this_score.push(value[i].rank)
+    }
+    let result = {"ranking":this_rank, "score":this_score}
+    res.send(result)
+}).then(()=>{
+    console.log("successful toprank")
+})
+})
+
 
 
 
