@@ -3,7 +3,7 @@ import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
 import EditForm from '../EditForm';
 import axios from 'axios';
-const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 class CommentPost extends Component {
 	constructor(props){
 		super(props);

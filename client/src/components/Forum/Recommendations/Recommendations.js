@@ -18,6 +18,7 @@ class Recommendations extends Component {
   onSubmitInputForm(values) {
     //TODO: send values to the backend and get a list of recommended friends
     // Send to back-end: 
+    // if()
     // TODO: Make sure this.props.username is passed down
     // {
     //     game: this.props.game,

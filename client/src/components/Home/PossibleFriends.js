@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Form, Button, Checkbox, Row, List } from 'antd';
 import 'antd/dist/antd.css';
 import './PossibleFriends.css';
+import axios from 'axios';
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 const testFriends1 = ['John', 'Ailce', 'Kevin', 'Lucy', 'Ted', 'Amy'];
 const testFriends2 = ['Xavier', 'Belle', 'Sana', 'Lazzaro', 'Joan'];
 const defaultCheckValues = [];
@@ -21,11 +23,19 @@ class PossibleFriends extends Component {
         // {
         //     username: this.props.username
         // }
+        const send = {
+            username: this.props.username
+        }
         // TODO: check if this.props.username is passed down
         // get from backend: 
         // {
         //     possibleFriends: a list of strings
         // }
+        axios.post(home_url + "api/Friend", send)
+        .then(res=>{
+            console.log("response data", res.data)
+            // this.setState({possibleFriends: res.data.friend});
+        })
         // change line below: 
         this.setState({possibleFriends: testFriends1});
     }
@@ -43,10 +53,22 @@ class PossibleFriends extends Component {
         // {
         //     selectedFriends: this.state.selectedFriends
         // }
+        const send = {
+            selectedFriends: this.state.selectedFriends
+        }
         // Get from back-end: 
         // {
         //     possibleFriends: a list of strings
         // }
+        // axios.post(home_url + "api/sellect_friend", send)
+        // .then(res=>{
+        //     console.log("response data", res.data)
+        //     // const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
+        //     // this.setState({
+        //     //     possibleFriends: nextFriends,
+        //     //     selectedFriends: defaultCheckValues,
+        //     // });
+        // })
         // modify lines below to fit: 
         const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
         this.setState({

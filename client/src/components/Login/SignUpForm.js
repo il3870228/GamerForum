@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Form, Button, Input, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import './Login.css';
+import axios from 'axios';
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
+
 class SignUpForm extends Component {
   constructor(props) {
       super(props);
@@ -16,20 +19,39 @@ class SignUpForm extends Component {
       this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
   }
   handleSubmit(event)  {
+      event.preventDefault();
       this.props.form.validateFields((err, values) => {
         if (!err) {
           console.log('Inside handleSubmit: values in form: ', values);
+
           // send to back-end: 
           // {
           //   email: values.email,
           //   username: values.username,
           //   password: values.password,
           // }
-          // get error/success message from back-end
+          const send = {
+            email: values.email,
+            username: values.username,
+            password: values.password
+          }
+          axios.post(home_url + "api/signup", send)
+          .then(res=>{
+            console.log("response", res.data)
+            if(res.data == "Success"){
+              this.props.loggedIn(values.username, values.password);
+            }
+            else{
+              this.setState({
+                LogInErrorDisplay: true,
+                LogInError: res.data,
+              });
+            }
+          // get error/success message from backend
           // if error: 
-          //   set state on LogInErrorDisplay and LogInError
+          //   set LogInErrorDisplay and LogInError
           // if success: 
-          this.props.loggedIn(values.username, values.password);
+          })
         }
       })
   }

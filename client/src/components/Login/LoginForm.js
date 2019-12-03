@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Form, Button, Icon, Input, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import './Login.css';
+import axios from 'axios';
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
+
 
 class LoginForm extends Component {
   constructor(props) {
@@ -14,6 +17,7 @@ class LoginForm extends Component {
   }
 
   handleSubmit(event)  {
+      event.preventDefault();
       console.log('this.props: ', this.props);
       this.props.form.validateFields((err, values) => {
         if (!err) {
@@ -23,11 +27,30 @@ class LoginForm extends Component {
           //   username: values.username,
           //   password: values.password,
           // }
+          const send = {
+            username: values.username,
+            password: values.password
+          }
+          console.log("input data: ", send)
+          axios.post(home_url + "api/login", send)
+          .then(res=>{
+            console.log("response", res.data)
+            if(res.data == "Success"){
+              this.props.loggedIn(values.username, values.password);
+            }
+            else{
+              this.setState({
+                LogInErrorDisplay: true,
+                LogInError: res.data,
+              });
+            }
           // get error/success message from backend
           // if error: 
           //   set LogInErrorDisplay and LogInError
           // if success: 
-          this.props.loggedIn(values.username, values.password);
+          })
+
+          
         }
       });
   }

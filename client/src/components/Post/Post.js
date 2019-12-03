@@ -7,7 +7,7 @@ import CommentPost from "../Comment/CommentPost";
 import './Post.css';
 
 import axios from 'axios';
-const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 class Post extends Component {
 	constructor(props){
 		super(props);

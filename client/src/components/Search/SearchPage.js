@@ -3,7 +3,7 @@ import SearchForm from "./SearchForm";
 import '../Forum/Forum.css';
 import axios from 'axios';
 import SearchResultPost from "./SearchResultPost";
-const home_url = "http://ec2-3-15-161-191.us-east-2.compute.amazonaws.com:3000/"
+const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 class SearchPage extends Component {
   constructor(props) {
       super(props);
