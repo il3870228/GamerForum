@@ -61,13 +61,6 @@ class RecInputForm extends Component {
               <Input/>
             )}
           </Form.Item>
-          <Form.Item label="Rating">
-            {getFieldDecorator('rate', {
-              initialValue: 0,
-              requred: true,
-              message: 'Please enter your rating'
-            })(<Rate />)}
-          </Form.Item>
           <Form.Item label="Postion">
             {getFieldDecorator('confirm', {
               rules: [{ required: true, message: 'Please select your position'}]
