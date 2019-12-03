@@ -44,11 +44,11 @@ con.constructor.prototype.query_p = (sql) => {
 
 con.query_p(`select * from USER;`).then((value) => {
         console.log("first query test run" + `${JSON.stringify(value)}`)
-    }).then((value) => {
-        con.end()
-    })
-    //////////////// mysql
+    })    //////////////// mysql
 
+con.query_p(`select * from USER;`).then((value) => {
+        console.log("second query test run" + `${JSON.stringify(value)}`)
+    })
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
@@ -96,6 +96,7 @@ app.post('/api/login', function(req, res, next) {
     
     // check username
     con.query_p(`select * from USER where username=\'${username}\'`).then((value)=>{
+		console.log(value)
         if (value.length == 0){
             // no username 
             res.send("Username not defined")
@@ -126,7 +127,7 @@ app.post('/api/signup', (req,res,next)=>{
     var email = req.body.email
     var username = req.body.username
     var password = req.body.password
-    
+	 
 })
 
 
