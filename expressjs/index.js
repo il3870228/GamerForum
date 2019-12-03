@@ -191,11 +191,11 @@ order by rate desc; \
     })
 })
 
-app.post('/api/rating',(req,res,next)=>{
+app.post('/api/profile/rating',(req,res,next)=>{
     let username = req.body.username
     let friendname = req.body.friend_username
     let rate = req.body.friendsRating
-    
+
 })
 
 
