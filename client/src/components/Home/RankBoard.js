@@ -7,22 +7,30 @@ class RankBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ranking: ['Julie', 'Emma', 'John', 'Josh', 'Roman']
+            ranking: []
         };
-        this.updateRanks = this.updateRanks.bind(this);
     }
 
-    updateRanks() {
-        //TODO: Should use this.props.game to get ranking from back end
+    componentDidMount() {
+        // send to back-end: 
+        // {
+        //     game: this.props.game
+        // }
+        // get from back-end:
+        // {
+        //     ranking: (a list of strings)
+        // }
+        // this.setState({ranking: back-end ranking});
         this.setState({ ranking: ['Julie', 'John', 'Josh', 'Roman', 'Emma']});
     }
+
     render() {
         const rankWithIdx = this.state.ranking.map((val, index) => ((index+1) + ". " + val));
         return (
             <div className='margins'>
                 <List
                     size="large"
-                    header={<div>{this.props.game}</div>}
+                    header={<div>{this.props.game}-Top Players</div>}
                     bordered
                     dataSource={rankWithIdx}
                     renderItem={item => <List.Item>{item}</List.Item>}

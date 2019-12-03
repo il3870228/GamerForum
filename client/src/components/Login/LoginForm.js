@@ -14,6 +14,15 @@ class LoginForm extends Component {
       this.props.form.validateFields((err, values) => {
         if (!err) {
           console.log('Inside handleSubmit: values in form: ', values);
+          // send to backend: 
+          // {
+          //   username: values.username,
+          //   password: values.password,
+          // }
+          // get error/success message from backend
+          // if error: 
+          //   TODO: DO SOMETHING!
+          // if success: 
           this.props.loggedIn(values.username, values.password);
         }
       });

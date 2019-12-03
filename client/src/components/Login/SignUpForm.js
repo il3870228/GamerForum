@@ -15,6 +15,16 @@ class SignUpForm extends Component {
       this.props.form.validateFields((err, values) => {
         if (!err) {
           console.log('Inside handleSubmit: values in form: ', values);
+          // send to back-end: 
+          // {
+          //   email: values.email,
+          //   username: values.username,
+          //   password: values.password,
+          // }
+          // get error/success message from back-end
+          // if error: 
+          //   TODO: DO SOMETHING!!
+          // if success: 
           this.props.loggedIn(values.username, values.password);
         }
       })

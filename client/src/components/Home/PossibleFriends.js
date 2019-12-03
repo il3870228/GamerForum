@@ -9,11 +9,25 @@ class PossibleFriends extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            possibleFriends: testFriends1,
+            possibleFriends: [],
             selectedFriends: defaultCheckValues,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        // send to backend: 
+        // {
+        //     username: this.props.username
+        // }
+        // TODO: check if this.props.username is passed down
+        // get from backend: 
+        // {
+        //     possibleFriends: a list of strings
+        // }
+        // change line below: 
+        this.setState({possibleFriends: testFriends1});
     }
 
     handleChange(checkedValues) {
@@ -25,6 +39,15 @@ class PossibleFriends extends Component {
         //TODO: User add a list of new friends: Should send selectedFriends to backend
         console.log('handleSubmit in PossibleFriends');
         //TODO: nextFriends should be replace by a new list of recommended friends from the backend
+        // Send to back-end: 
+        // {
+        //     selectedFriends: this.state.selectedFriends
+        // }
+        // Get from back-end: 
+        // {
+        //     possibleFriends: a list of strings
+        // }
+        // modify lines below to fit: 
         const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
         this.setState({
             possibleFriends: nextFriends,

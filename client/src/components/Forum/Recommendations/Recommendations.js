@@ -17,6 +17,19 @@ class Recommendations extends Component {
 
   onSubmitInputForm(values) {
     //TODO: send values to the backend and get a list of recommended friends
+    // Send to back-end: 
+    // TODO: Make sure this.props.username is passed down
+    // {
+    //     game: this.props.game,
+    //     username: this.props.username,
+    //     ranking: values.ranking,
+    //     role: values.confirm,
+    // }
+    // get from back-end: 
+    // {
+    //     recFriend: a list of strings
+    // }
+    // TODO: modify below with recFriend
     console.log('recommendation input form values: ', values);
     this.setState({
         DisplayInputForm: false,
@@ -27,6 +40,10 @@ class Recommendations extends Component {
   onSubmitOutputForm(values) {
     //param: values: an array of strings (names of friends added)
     //TODO: add newly selected friends
+    // Send to back-end: 
+    // {
+    //     selectedFriends: values
+    // }
     console.log('recommendation output form values: ', values);
     this.setState({
         DisplayInputForm: true,
