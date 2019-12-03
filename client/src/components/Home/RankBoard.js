@@ -8,7 +8,8 @@ class RankBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ranking: []
+            ranking: [],
+            score:[]
         };
     }
 
@@ -17,24 +18,40 @@ class RankBoard extends Component {
         // {
         //     game: this.props.game
         // }
-        const send = {
-            game: this.props.game
+        //overwatch = 0
+        //pubg = 1
+        var temp;
+        if(this.props.game == "Overwatch"){
+            temp = 0
         }
-        // axios.post(home_url + "api/RankBoard", send)
-        // .then(res=>{
-        //     console.log("response data", res.data)
-        //     // this.setState({ranking: res.data.ranking});
-        // })
+        else{
+            temp = 1
+        }
+        const send = {
+            game: temp
+        }
+        console.log("top rank send data: ", send);
+        axios.post(home_url + "api/toprank", send)
+        .then(res=>{
+            console.log("response data", res.data)
+            // this.setState({ranking: res.data.ranking});
+            this.setState({ ranking: res.data.ranking});
+            this.setState({ score: res.data.score});
+        })
         // get from back-end:
         // {
         //     ranking: (a list of strings)
         // }
         // this.setState({ranking: back-end ranking});
-        this.setState({ ranking: ['Julie', 'John', 'Josh', 'Roman', 'Emma']});
+        // this.setState({ ranking: ['Julj', 'John', 'Josh', 'Roman', 'Emma']});
+        // this.setState({ score: ['Julie', 'John', 'Josh', 'Roman', 'Emma']});
     }
 
     render() {
-        const rankWithIdx = this.state.ranking.map((val, index) => ((index+1) + ". " + val));
+        var rankWithIdx = this.state.ranking.map((val, index) => ((index+1) + ". " + val));
+        for (let i in rankWithIdx){
+            rankWithIdx[i] = rankWithIdx[i]+ " " + this.state.score[i]
+        }
         return (
             <div className='margins'>
                 <List

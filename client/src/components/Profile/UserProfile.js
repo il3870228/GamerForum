@@ -76,7 +76,8 @@ class UserProfile extends Component {
 		// }
 		const send = {
 			username: this.props.username,
-			friendsRating: newFriendsRating
+			friend_username: this.state.friends[index],
+			friendsRating: newFriendsRating[index]
 		}
 		console.log('rate data send: ',send)
 		axios.post(home_url + "api/profile/rating", send)
