@@ -127,7 +127,15 @@ app.post('/api/signup', (req,res,next)=>{
     var email = req.body.email
     var username = req.body.username
     var password = req.body.password
-	 
+    con.query_p(`select * from USER where email = \'${email}\'`).then((value)=>{
+        if (value.length == 0){
+            
+        }
+        else {
+            res.send("Email already taken")
+)
+        }
+    })
 })
 
 
