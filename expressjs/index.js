@@ -46,18 +46,26 @@ con.query_p(`select * from USER;`).then((value) => {
         console.log("first query test run" + `${JSON.stringify(value)}`)
     })    //////////////// mysql
 
+var my_global = 0
 con.query_p(`select * from USER;`).then((value) => {
         console.log("second query test run" + `${JSON.stringify(value)}`)
-    })
+        my_global = 10000
+    }).then(()=>{console.log("what the fuck")
+    }).then(()=>{console.log(my_global) // return 10000; assignment worked
+        }) 
+    console.log("my global is ",my_global) // return 0
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
 
 app.use(cors()); // Leo Lee's suggestion to remove same origin policy error
-app.get('*', (req, res) => {
-    res.send('success mee');
+app.get('/a', (req, res) => {
+    res.send('a');
 });
 
+app.get('/a/b', (req, res) => {
+    res.send('a/b');
+});
 var url = require('url');
 
 /*parsing HTTP request body*/
@@ -129,44 +137,107 @@ app.post('/api/signup', (req,res,next)=>{
     var password = req.body.password
     con.query_p(`select * from USER where email = \'${email}\'`).then((value)=>{
         if (value.length == 0){
-            
+            // no email. check username.
+            return con.query_p(`select * from USER where username =\'${username}\'`)
         }
         else {
             res.send("Email already taken")
-)
+        } 
+    }).then((value)=>{
+        if (value.length == 0){  // error is suppressed in case "value" is undefined. 
+            return con.query_p(`insert into USER(email,password,username) values (\'${email}\', \'${password}\', \'${username}\'  )`)
         }
+        else {
+            res.send("Username already taken")
+            return Promise.reject() // error is suppressed
+        }
+    }).then(() => {res.send("Success")}, () => {console.log("suppressed error")})
+})
+
+// curl -d '{"username":"lij", "password":"value2","email":"ljlj@"}' -H "Content-Type:application/json" -X POST http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/api/signup
+
+app.post('/api/profile',(req,res,next)=>{
+    let username = req.body.username
+    let FR = 'FRIENDWITH'
+    let this_id = -1 // global variable carrying id correponding to username
+    let this_email = "" 
+    let this_password = ""
+    let this_friendname = []
+    let this_friendrate = []
+    con.query_p(`select * from USER where username = \'${username}\'`).then((value)=>{
+        this_id = value[0].userid 
+        this_email = value[0].email
+        this_password = value[0].password // this_user info get!
+        return con.query_p(`\
+select u.username as friendname, rate \
+from ${FR} f inner join USER u \
+on f.friendid = u.userid \
+where id = ${this_id} \
+order by rate desc; \
+\
+`)
+    }).then((value)=>{ // value is array of object of {friendname,rate}
+        console.log(value)
+        if (value.length > 0){
+            for (let i in value){
+                this_friendname.push(value[i].friendname)
+                this_friendrate.push(value[i].rate)
+            }
+        }
+        Promise.resolve()
+    }).then(()=>{ // friends, resolved
+        let result = {email:this_email, password:this_password, friends:this_friendname, friendsRating: this_friendrate }
+        res.send(result)
+    })
+})
+
+app.post('/api/profile/rating',(req,res,next)=>{
+    let username = req.body.username
+    let friendname = req.body.friend_username
+    let new_rate = req.body.friendsRating
+    let this_user_id = -1
+    let this_friend_id = -1
+    con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
+        this_user_id = value[0].userid
+        return con.query_p(`select userid from USER where username = \'${friendname}\'`)
+    }).then((value)=>{
+        this_friend_id = value[0].userid
+    }).then(()=>{con.query_p(`update FRIENDWITH set rate = ${new_rate} where id = \'${this_user_id}\' and friendid = \'${this_friend_id}\'`)
+    }).then(()=>{
+        let a = "profile rating updated"
+        console.log(a)
+        res.send(a)
     })
 })
 
 
+app.post('/api/toprank',(req,res,next)=>{
+    let game_id = req.body.game 
+    con.query_p(`\
+select u.username as username, p.rank \
+from PLAYED p inner join USER u on p.userid = u.userid \
+where gameid = ${game_id}  \
+order by p.rank desc \
+limit 5 \
+\
+`).then((value)=>{
+    let this_rank = []
+    let this_score = []
+    for (let i in value){
+        this_rank.push(value[i].username)
+        this_score.push(value[i].rank)
+    }
+    let result = {"ranking":this_rank, "score":this_score}
+    res.send(result)
+}).then(()=>{
+    console.log("successful toprank")
+})
+})
 
-// register: return true when successful, false when failure.
-// given email, username, password
-app.post('/api/register', function(req, res, next) {
-    console.log('register start');
-    // check if username already there
-    let table = 'USER';
-    let sql_register = `select * from ${table} where usernam=\'${req.body.username}\'`;
-    con.query(sql_register, (err, result, fields) => {
-        // check if username already there
-        if (result.length != 0) {
-            res.send(false);
-            return;
-        }
-        // username available
-        else {
-            let table = 'USER'
-            let sql_register_insert = `insert into ${table}(username, email, password) values (\'${req.body.username}\',\'${req.email}\',\'${req.body.password}\')`;
-            con.query(sql_register_insert, (err, result, fields) => {
-                // register should be successful
-                res.send(true);
-                return
-            });
-        }
-    });
-});
 
-/********************************/
+
+
+/*******************************SHOW CREATE TABLE mytable; show constraints*/
 
 /*saving post; */
 var post_save = function(req, res, next) {
