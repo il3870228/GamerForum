@@ -44,8 +44,8 @@ class RecInputForm extends Component {
          },
       }
     }
-    const owRoles = ['Damage', 'Tank', 'Support'];
-    const PUBGRoles = ['Leader', 'Sniper', 'Fragger', 'Support', 'Driver', 'Explorer'];
+    const owRoles = ['Sniper', 'Assassin', 'Tank', 'Support', 'Freeman'];
+    const PUBGRoles = ['Leader', 'Sniper', 'Fragger', 'Support', 'Driver'];
     const roles = this.props.game === 'Overwatch' ? owRoles : PUBGRoles;
     return (
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className='rec-input-form'>
