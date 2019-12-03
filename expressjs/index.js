@@ -234,7 +234,37 @@ limit 5 \
 })
 })
 
-
+app.post('/api/recommend', (req,res,next)=>{
+    // TODO: insert game_username as well
+    let game = req.body.game 
+    let username = req.body.username
+    let ranking = parseInt(req.body.ranking)
+    let role = req.body.role
+    let userid = -1
+    con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
+        userid = value[0].userid
+        // check if existent
+        return con.query_p(`select * from PLAYED where userid=${userid} and gameid=${game}`)
+    }).then((value)=>{
+        console.log('user id is ')
+        console.log(userid)
+        if (value.length == 0){
+            return Promise.reject()
+        }
+        else{
+            return Promise.resolve()
+        }
+    }).then((resolved)=>{
+        // only update
+        con.query_p(`update PLAYED set \`rank\` = ${ranking}, favoriteposition = ${role} where gameid = ${game} and userid = ${userid}`)
+        console.log("recommendation updated!")
+    }, (rejected)=>{
+        // insert new 
+        con.query_p(`insert into PLAYED values (${game},${userid},\'${role}\',${ranking}),null`)
+        console.log("recommendation inserted!")
+    })
+    
+})
 
 
 /*******************************SHOW CREATE TABLE mytable; show constraints*/
