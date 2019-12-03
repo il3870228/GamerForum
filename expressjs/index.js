@@ -194,9 +194,24 @@ order by rate desc; \
 app.post('/api/profile/rating',(req,res,next)=>{
     let username = req.body.username
     let friendname = req.body.friend_username
-    let rate = req.body.friendsRating
-
+    let new_rate = req.body.friendsRating
+    let this_user_id = -1
+    let this_friend_id = -1
+    con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
+        this_user_id = value[0].userid
+        return con.query_p(`select userid from USER where username = \'${friendname}\'`)
+    }).then((value)=>{
+        this_friend_id = value[0].userid
+    }).then(()=>{con.query_p(`update FRIENDWITH set rate = ${new_rate} where id = \'${this_user_id}\' and friendid = \'${this_friend_id}\'`)
+    }).then(()=>{
+        let a = "profile rating updated"
+        console.log(a)
+        res.send(a)
+    })
 })
+
+
+
 
 
 /*******************************SHOW CREATE TABLE mytable; show constraints*/
