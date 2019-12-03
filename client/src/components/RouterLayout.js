@@ -81,8 +81,8 @@ class RouterLayout extends Component {
             </Menu>
           </Header>
         </Layout>
-        <Layout className='lc'>
-          <Content className='mt'>
+        <Layout className= {pathName === '/Home' ? 'lc' : 'nlc'}>
+          <Content className={pathName === '/Home' ? 'mt' : 'nmt'}>
             {renderedPage}
           </Content>
         </Layout>

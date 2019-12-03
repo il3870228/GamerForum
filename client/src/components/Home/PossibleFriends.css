@@ -1,14 +1,30 @@
 .pf {
     width: 100%;
+    color:brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
 .pf-button {
     float: right;
     margin-top: 10px;
+    color: brown;
+    font-weight: bold;
+    background-color: rgba(175, 169, 169, 0.589);
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
 .margins {
     margin-left: 10px;
     margin-right: 10px;
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+.lgrey {
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
