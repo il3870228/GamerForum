@@ -1,3 +1,4 @@
+//////////////////mysql
 /* sql part*/
 /*mysql stuff*/
 // var mysql = require('mysql');
@@ -41,42 +42,18 @@ con.constructor.prototype.query_p = (sql) => {
     })
 }
 
-con.query_p(`select * from COMMENTS;`).then((value) => {
-    console.log("first query success with value" + value)
-}).then((value) => {
-    con.end()
-})
+con.query_p(`select * from USER;`).then((value) => {
+        console.log("first query test run" + `${JSON.stringify(value)}`)
+    })    //////////////// mysql
 
-con.query_p(`select * from COMMENTS;`).then((value) => {
-    console.log("second query success with value" + value)
-}).then((value) => {
-    con.end()
-})
-
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    let table = 'USER';
-    let sql = `select * from ${table}`;
-    console.log(sql);
-    con.query(sql, function(err, result, fields) {
-        if (err) throw err;
-        //console.log(result)
-        console.log("first select is successful!!")
-    });
-
-});
-
-
-/* importing express and provide an interface
-   the 'require' function executes express.js file and return the export object of that file */
-
-
+con.query_p(`select * from USER;`).then((value) => {
+        console.log("second query test run" + `${JSON.stringify(value)}`)
+    })
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
 
-app.use(cors()); // Leo Lee's suggestion
+app.use(cors()); // Leo Lee's suggestion to remove same origin policy error
 app.get('*', (req, res) => {
     res.send('success mee');
 });
@@ -104,6 +81,7 @@ app.use(function(req, res, next) {
 /* Middleware function restricted to a specific route */
 app.post('/api*', function(req, res, next) {
     console.log("A post request for api at " + Date.now());
+    console.log("request has content:" )
     console.log(req.body);
     next();
 });
@@ -113,37 +91,54 @@ app.post('/api*', function(req, res, next) {
 // login 
 // status 1 for success. 0 for failure with message
 app.post('/api/login', function(req, res, next) {
-    console.log('login session is called');
-    // req.body = {username, password}
-    // return value is array of JSON objects
-    let table = 'USER';
-    let sql_login = `select * from ${table} where username = \'${req.body.username}\'`;
-    console.log(sql_login);
-    con.query(sql_login, (err, result, fields) => {
-        let login_state = { status: 0, message: "Login Successful" }
-            // if there is no username match 
-        if (result.length == 0) {
-            login_state.status = 0
-            login_state.message = `There is no user named ${req.body.username}`;
-            res.send(login_state);
-            return;
+    let username = req.body.username 
+    let password = req.body.password
+    
+    // check username
+    con.query_p(`select * from USER where username=\'${username}\'`).then((value)=>{
+		console.log(value)
+        if (value.length == 0){
+            // no username 
+            res.send("Username not defined")
         }
-        // user exists. password no match
-        else if (result[0].password != req.body.password) {
-            login_state.status = 0
-            login_state.message = `Password is not a match for user: ${req.body.username}`;
-            res.send(login_state);
-            return;
-        }
-        // login successful.
         else {
-            login_state.status = 1
-                // login message doesn't matter at this point.
-            res.send(login_state);
-            return;
+            // check for password match
+            let flag = false
+            for (var i in value){
+                if (value[i].username == username && value[i].password == password ){
+                    flag = true 
+                    break
+                }
+            }
+            if (flag){
+                res.send("Success")
+            }
+            else {
+                res.send("Wrong Password")
+            }
         }
-    });
+    })
 })
+
+
+
+app.post('/api/signup', (req,res,next)=>{
+    console.log('signup start')
+    var email = req.body.email
+    var username = req.body.username
+    var password = req.body.password
+    con.query_p(`select * from USER where email = \'${email}\'`).then((value)=>{
+        if (value.length == 0){
+            
+        }
+        else {
+            res.send("Email already taken")
+)
+        }
+    })
+})
+
+
 
 // register: return true when successful, false when failure.
 // given email, username, password
@@ -401,9 +396,9 @@ let server = app.listen(myport, function() {
 
 
 /*app.method(path, handler): 'method' can be any one of HTTP verbs: get, set, put, delete
-  different methods: GET : represents a data retrieval
-  POST: data enclosed in the request as a new object
-  PUT: modify some data with data enclosed
-  DELETE: delete specified resource
- */
+different methods: GET : represents a data retrieval
+POST: data enclosed in the request as a new object
+PUT: modify some data with data enclosed
+DELETE: delete specified resource
+*/
 console.log("start routine at " + myport);

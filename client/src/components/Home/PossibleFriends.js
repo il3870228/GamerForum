@@ -89,13 +89,13 @@ class PossibleFriends extends Component {
                 >
                     <List
                         size="large"
-                        header={<div>Add Friends!</div>}
+                        header={<div className="lgrey">Add Friends!</div>}
                         bordered
                         dataSource={this.state.possibleFriends}
                         renderItem={
                             item =>
-                                <List.Item>
-                                    <Checkbox value={item}>
+                                <List.Item className="lgrey">
+                                    <Checkbox className="lgrey" value={item}>
                                         {item}
                                     </Checkbox>
                                 </List.Item>

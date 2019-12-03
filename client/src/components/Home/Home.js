@@ -14,13 +14,13 @@ class Home extends Component {
         return (
             <div className='home'>
                 <div className='column'>
-                    <RankBoard game='Overwatch'/>
+                    <RankBoard className='wordColor' game='Overwatch'/>
                 </div>
                 <div className='column'>
-                    <PossibleFriends key={username} username={username} />
+                    <PossibleFriends className='wordColor' key={username} username={username} />
                 </div>
                 <div className='column'>
-                    <RankBoard game='PUBG'/>
+                    <RankBoard className='wordColor' game='PUBG'/>
                 </div>
             </div>
         );

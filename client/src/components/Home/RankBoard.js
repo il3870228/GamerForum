@@ -39,10 +39,10 @@ class RankBoard extends Component {
             <div className='margins'>
                 <List
                     size="large"
-                    header={<div>{this.props.game}-Top Players</div>}
+                    header={<div className="lgrey">{this.props.game}-Top Players</div>}
                     bordered
                     dataSource={rankWithIdx}
-                    renderItem={item => <List.Item>{item}</List.Item>}
+                    renderItem={item => <List.Item className="lgrey">{item}</List.Item>}
                 />
             </div>
         );

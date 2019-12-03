@@ -14,9 +14,21 @@
 
 .home {
     width: 100%;
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
 .column {
     float: left;
     width: 33%;
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+.wordColor {
+    color: brown;
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
