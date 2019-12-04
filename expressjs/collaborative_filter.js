@@ -89,7 +89,7 @@ function recommand(input_data, data_base, max_score){
         let vec_B = [5*temp.score/max_score, temp.position]
         console.log("id :",temp.id)
         let similarity = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
-        console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
+        // console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
         if(query_pos.toUpperCase() !=  temp.position.toUpperCase()){
             // console.log(query_pos, " ---- --- --- ---", temp.position)
             // continue;
@@ -111,7 +111,7 @@ function recommand(input_data, data_base, max_score){
     for(let i = 0; i < total_count; i++){
         let list_i = arr[i].friend_list
         // console.log("user id: ", arr[i].id)
-        console.log(list_i)
+        // console.log(list_i)
         for(let j = 0; j < list_i.length; j ++){
             let temp_user = list_i[j].user_id
             // console.log("friend id: ", temp_user)
