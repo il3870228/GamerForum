@@ -130,6 +130,7 @@ app.post('/api/signup', (req,res,next)=>{
     var email = req.body.email
     var username = req.body.username
     var password = req.body.password
+    var userid = -1
     con.query_p(`select * from USER where email = \'${email}\'`).then((value)=>{
         if (value.length == 0){
             // no email. check username.
@@ -146,7 +147,20 @@ app.post('/api/signup', (req,res,next)=>{
             res.send("Username already taken")
             return Promise.reject() // error is suppressed
         }
-    }).then(() => {res.send("Success")}, () => {console.log("suppressed error")})
+    }).then(() => {
+        return con.query_p(`select * from USER where username = \'${username}\'`)
+    }, () => {console.log("suppressed error")}).then((value)=>{
+        if (typeof value !== 'undefined' && value !== null){
+            // TODO: also insert into neo4j
+            var spawn = require("child_process").spawn
+            var process = spawn('python3',['./create_user.py',userid, username])
+            process.stdout.on('data',(data)=>{
+                console.log('what data?')
+                console.log(data)
+            })
+            res.send("Success")
+        }
+    })
 })
 
 // curl -d '{"username":"lij", "password":"value2","email":"ljlj@"}' -H "Content-Type:application/json" -X POST http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/api/signup
@@ -356,17 +370,83 @@ app.post('/api/recommend/add',(req,res)=>{
     })
 })
 
-// TODO:
-app.post('/api/possibleFriends',(req,res)=>[
+// TODO: spawn a subprocess to run python script then parse the stdout output.
+app.post('/api/possibleFriends',(req,res)=>{
+    let this_username = req.body.username 
+    let this_userid = -1
+    // need user id
+    con.query_p(`select username, userid from USER; `).then((value)=>{
+        for (let i in value){
+            if (value[i].username == this_username){
+                this_userid = value[i].userid
+            }
+        }
+        var spawn = require('child_process').spawn
+        var process = spawn('python3',['./get_possible_user.py',this_userid])
+        process.stdout.on('data',(data)=>{
+            let possible_user = data.toString()
+            console.log(possible_user)
+            possible_user = JSON.parse(possible_user)
+            res.send(possible_user)
+    })
 
-    res.send(['friend one','firn1','wiw','wafawfawef'])
-])
+    })
+})
 
-// TODO:
-app.post('/api/possibleFriends/add',(req,res)=>[
-
-    res.send(1)
-])
+// TODO: add in sql and also add in neo4j
+app.post('/api/possibleFriends/add',(req,res)=>{
+    let this_username = req.body.username
+    let this_userid = -1
+    let selectedFriends = req.body.selectedFriends
+    let this_selected_friend_id = []
+    let _arr = []
+    con.query_p(`select username, userid from USER;`).then((value)=>{
+        for (let i in value){
+            if (value[i].username == this_username ){
+                this_userid = value[i].userid
+                break
+            }
+        }
+        return con.query_p(`select username, userid from USER;`)
+    }).then((value)=>{
+		for (let i in selectedFriends){
+			for (let j in value){
+				if (value[j].username == selectedFriends[i]){
+                    this_selected_friend_id.push(value[j].userid)
+				}
+			}
+        }
+    }).then(()=>{
+        for (let i in this_selected_friend_id){
+            _arr.push(con.query_p(`insert into FRIENDWITH (id,friendid, rate) values (${this_userid}, ${this_selected_friend_id[i]}, 3 )`))
+        }
+        Promise.all(_arr).then(()=>{
+            console.log("adding friend works")
+            res.send('done')
+        },()=>{
+            console.log('adding friend rejects')
+            res.send('not done')    
+        })
+    }).then(()=>{
+        // TODO: update neo4j as well here using subprocess 
+        var processes = []
+        var spawn = require('child_process').spawn
+        // this_userid; this_selected_friend_id;
+        for (let i in this_selected_friend_id){
+            processes.push(spawn('python3',['./new_friends.py',this_userid, selectedFriends[i]]))
+        }
+    }).then(()=>{
+        // TODO: another call to possible friends and get new value 
+        var spawn = require('child_process').spawn
+        var process1 = spawn('python3',['./get_possible_user.py',this_username])
+        process1.stdout.on('data',(data)=>{
+            let possible_user = data.toString()
+            console.log(possible_user)
+            possible_user = JSON.parse(possible_user)
+            res.send(possible_user)
+        })
+    })
+})
 
 
 /*SHOW CREATE TABLE mytable; show constraints*/
