@@ -55,7 +55,7 @@ con.query_p(`select * from USER;`).then((value) => {
         my_global = 10000
     }).then(()=>{console.log("what the fuck")
     }).then(()=>{console.log(my_global) // return 10000; assignment worked
-        }) 
+        })
     console.log("my global is ",my_global) // return 0
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
@@ -102,17 +102,17 @@ app.post('/api*', function(req, res, next) {
 
 
 /********************************/
-// login 
+// login
 // status 1 for success. 0 for failure with message
 app.post('/api/login', function(req, res, next) {
-    let username = req.body.username 
+    let username = req.body.username
     let password = req.body.password
-    
+
     // check username
     con.query_p(`select * from USER where username=\'${username}\'`).then((value)=>{
 		console.log(value)
         if (value.length == 0){
-            // no username 
+            // no username
             res.send("Username not defined")
         }
         else {
@@ -120,7 +120,7 @@ app.post('/api/login', function(req, res, next) {
             let flag = false
             for (var i in value){
                 if (value[i].username == username && value[i].password == password ){
-                    flag = true 
+                    flag = true
                     break
                 }
             }
@@ -148,9 +148,9 @@ app.post('/api/signup', (req,res,next)=>{
         }
         else {
             res.send("Email already taken")
-        } 
+        }
     }).then((value)=>{
-        if (value.length == 0){  // error is suppressed in case "value" is undefined. 
+        if (value.length == 0){  // error is suppressed in case "value" is undefined.
             return con.query_p(`insert into USER(email,password,username) values (\'${email}\', \'${password}\', \'${username}\'  )`)
         }
         else {
@@ -166,12 +166,12 @@ app.post('/api/profile',(req,res,next)=>{
     let username = req.body.username
     let FR = 'FRIENDWITH'
     let this_id = -1 // global variable carrying id correponding to username
-    let this_email = "" 
+    let this_email = ""
     let this_password = ""
     let this_friendname = []
     let this_friendrate = []
     con.query_p(`select * from USER where username = \'${username}\'`).then((value)=>{
-        this_id = value[0].userid 
+        this_id = value[0].userid
         this_email = value[0].email
         this_password = value[0].password // this_user info get!
         return con.query_p(`\
@@ -218,7 +218,7 @@ app.post('/api/profile/rating',(req,res,next)=>{
 
 
 app.post('/api/toprank',(req,res,next)=>{
-    let game_id = req.body.game 
+    let game_id = req.body.game
     con.query_p(`\
 select u.username as username, p.rank \
 from PLAYED p inner join USER u on p.userid = u.userid \
@@ -241,8 +241,7 @@ limit 5 \
 })
 
 app.post('/api/recommend', (req,res,next)=>{
-    // TODO: insert game_username as well
-    let game = req.body.game 
+    let game = req.body.game
     let username = req.body.username
     let ranking = parseInt(req.body.ranking)
     let role = req.body.role
@@ -272,7 +271,7 @@ app.post('/api/recommend', (req,res,next)=>{
         con.query_p(sql)
         console.log("recommendation updated!")
     }, (rejected)=>{
-        // insert new 
+        // insert new
         let sql = `insert into PLAYED values (${game},${userid},\'${role}\',${ranking},null)`
         console.log(sql)
         con.query_p(sql)
@@ -297,7 +296,7 @@ app.post('/api/recommend', (req,res,next)=>{
                 }
             }
         }
-        let input_date = []        
+        let input_date = []
         let _arr = []
         for (let i in universe){
             _arr.push(universe[i].score)
@@ -306,7 +305,7 @@ app.post('/api/recommend', (req,res,next)=>{
             }
         }
         let max_score = Math.max(..._arr)
-        output = recommend(input_date, universe, max_score) // list of {user_id, ...}
+        output = JSON.parse( JSON.stringify(recommend(input_date, universe, max_score))) // list of {user_id, ...}
         // res.send(['one','otwo','three'])
     }).then((value)=>{
         return con.query_p(`select username, userid from USER `)
@@ -319,16 +318,15 @@ app.post('/api/recommend', (req,res,next)=>{
                 }
             }
         }
-
         // res.send(['1','2','3'])
         res.send(recommened_friend)
     })
 })
 
 
-// lookup function: transforms an array of usernames to an array of userids 
+// lookup function: transforms an array of usernames to an array of userids
 // output is a string of JSON array
-lookup = ( usernames )=>{
+to_id = ( usernames )=>{
 	con.query_p(`select username, userid from USER`).then((value)=>{
 		var output = []
 		for (let i in usernames){
@@ -340,38 +338,62 @@ lookup = ( usernames )=>{
 			}
 		}
 		if (output.length == usernames.length){
-			console.log("look up success!!!")	
+			console.log("look up success!!!")
 		}
 		return JSON.stringify(output)
 	})
 }
 
-// TODO: 
+// given a list of id, return username
+to_name  = ( userids )=>{
+  con.query_p(`select username, userid from USER`).then((value)=>{
+		var output = []
+		for (let i in userids){
+			for (let j in value){
+				if (value[j].userid == userids[i]){
+					output.push(value[j].username)
+					break
+				}
+			}
+		}
+		if (output.length == usernames.length){
+			console.log("look up success!!!")
+		}
+		return JSON.stringify(output)
+	   })
+}
+
+// TODO:
 app.post('/api/recommend/add',(req,res)=>{
-    let this_username = req.body.username 
-    let this_userid = -1 
-    let this_selected_friend_name = req.body.selectedFriends
-    let this_selected_friend_id = []
-    let this_map = []
-    
-    res.send('done')
+    let this_username = req.body.username
+    let this_userid = JSON.parse(to_id([this_username]))[0]
+    console.log(this_userid)
+    let selectedFriends = req.body.selectedFriends
+    let this_selected_friend_id = JSON.parse(to_id(selectedFriends))
+    console.log(this_selected_friend_id)
+    while (1){}
+    let _arr = []
+    for (let i in this_selected_friend_id){
+      _arr.push(con.query_p(`insert into FRIENDWITH (id,friendid, rate) values (${this_userid}, ${this_selected_friend_id[i]}, 3 )`))
+    }
+    Promise.all(_arr).then(()=>{
+        console.log("adding friend works")
+        res.send('done')
+    },()=>{
+        console.log('adding friend rejects')
+        res.send('not done')
+    })
 })
 
-// TODO: 
-app.post('/api/recommend/add',(req,res)=>{
-
-    res.send('done')
-})
-
-// TODO: 
+// TODO:
 app.post('/api/possibleFriends',(req,res)=>[
-    
+
     res.send(['friend one','firn1','wiw','wafawfawef'])
 ])
 
-// TODO: 
+// TODO:
 app.post('/api/possibleFriends/add',(req,res)=>[
-    
+
     res.send(1)
 ])
 
@@ -392,10 +414,10 @@ var post_save = function(req, res, next) {
     //     console.log(result);
     // });
     // res.send({ id: 1 });
-    let this_username = req.body.username 
+    let this_username = req.body.username
     let this_time = req.body.time
     let this_userid = -1
-    let this_content = req.body.content 
+    let this_content = req.body.content
     let this_game = (req.body.game == 'PUBG')? 1:0
     con.query_p(`select userid from USER where username = \'${this_username}\'`).then((value)=>{
         this_userid = value[0].userid
@@ -473,13 +495,13 @@ app.post('/api/delete_post', post_delete)
 
 /* comments are connected to posts.  */
 app.post('/api/post_comment', (req,res,next)=>{
-    let this_postid = req.body.postid 
+    let this_postid = req.body.postid
     let this_username = req.body.username
     let this_userid = -1
     let this_time = req.body.time
     let this_content = req.body.content
     con.query_p(`select userid from USER where username = \'${this_username}\' `).then((value)=>{
-        this_userid = value[0].userid 
+        this_userid = value[0].userid
         con.query_p(`insert into COMMENTS (content, time, postid, userid) values (\'${this_content}\', \'${this_time}\' , ${this_postid} , ${this_userid})`)
     }).then(()=>{
         console.log("comment saved!!!!!!!!!!!!!!!!!!!")
@@ -616,7 +638,7 @@ console.log("start routine at " + myport);
 //         })
 //     })
 
-//     // actual 
+//     // actual
 //     promise.then((value) => {
 //         console.log('promise 2')
 //         get_comment(value)
@@ -626,7 +648,7 @@ console.log("start routine at " + myport);
 //         var sql = `select * from ${comments} order by commentid desc`
 //         con.query(sql, function(err, result) {
 //             /*posts still accessible*/
-//             // console.log(result) 
+//             // console.log(result)
 //             for (var i in result) {
 //                 for (var j in posts) {
 //                     if (result[i].postid == posts[j].postid) {
