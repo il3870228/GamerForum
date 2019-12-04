@@ -42,7 +42,7 @@ class Recommendations extends Component {
                 console.log("recommend data", res.data)
                 this.setState({
                     DisplayInputForm: false,
-                    RecFriendList: res.data,
+                    RecFriendList: res.data
                 });
             })
         // get from back-end: 
@@ -51,7 +51,7 @@ class Recommendations extends Component {
         // }
         // TODO: modify below with recFriend
         console.log('recommendation input form values: ', values);
-        
+
     }
 
     onSubmitOutputForm(values) {
@@ -69,7 +69,7 @@ class Recommendations extends Component {
             .then(res => {
                 console.log('recommendation output form values: ', values);
             });
-        
+
         this.setState({
             DisplayInputForm: true,
         });
@@ -78,7 +78,7 @@ class Recommendations extends Component {
 
     render() {
         //TODO: Replace this with results (a list of potential friends) from the advance function 
-
+        console.log('state: ', this.state);
         return (
             <div className='f1'>
                 {this.state.DisplayInputForm ?
