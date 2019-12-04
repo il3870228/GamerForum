@@ -28,10 +28,10 @@ class RouterLayout extends Component {
     console.log('pathname: ', pathName);
     let renderedPage;
     if (pathName === '/Overwatch') {
-      renderedPage = <GamePage username={username} game='Overwatch' />
+      renderedPage = <GamePage key='Overwatch' username={username} game='Overwatch' />
       console.log('ow')
     } else if (pathName === '/PUBG') {
-      renderedPage = <GamePage username={username} game='PUBG' />
+      renderedPage = <GamePage key='PUBG' username={username} game='PUBG' />
       console.log('pubg')
     } else if (pathName === '/Home') {
       renderedPage = <Home username={username} />
