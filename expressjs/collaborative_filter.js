@@ -2,7 +2,7 @@
 //input: A: data for user A, B: data for user B
 function calc_eu_dist(A,B, friend_list_A, friend_list_B){
     let temp_a = A[0]-B[0]
-    let diff = temp_a*temp_a
+    let diff = temp_a*temp_a+0.8
     // console.log(temp_a, temp_b)
     diff = Math.sqrt(diff);
 
@@ -90,7 +90,7 @@ function recommand(input_data, data_base, max_score){
         console.log("id :",temp.id)
         let similarity = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
         // console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
-        if(query_pos.toUpperCase() !=  temp.position.toUpperCase()){
+        if(query_pos.toUpperCase() ==  temp.position.toUpperCase()){
             // console.log(query_pos, " ---- --- --- ---", temp.position)
             // continue;
             similarity += 0.15

@@ -415,6 +415,7 @@ app.post('/api/possibleFriends/add',(req,res)=>{
     let selectedFriends = req.body.selectedFriends
     let this_selected_friend_id = []
     let _arr = []
+    let p_count = 0
     con.query_p(`select username, userid from USER;`).then((value)=>{
         for (let i in value){
             if (value[i].username == this_username ){
@@ -451,11 +452,43 @@ app.post('/api/possibleFriends/add',(req,res)=>{
             // while (1) {
             //     console.log(selectedFriends)
             // }
-            var processes = []
+            if (this_selected_friend_id.length >= 1){
             var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[0]]) //  
+            }
             // this_userid; this_selected_friend_id;
-            for (let i in this_selected_friend_id){
-                processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
+            // for (let i in this_selected_friend_id){
+            //     processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
+            // }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 2){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[1]]) //  
+            }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 3){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[2]]) //  
+            }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 4){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[3]]) //  
+            }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 5){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[4]]) //  
+            }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 6){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[5]]) //  
+            }
+        }).then(()=>{
+            if (this_selected_friend_id.length >= 7){
+            var spawn = require('child_process').spawn
+            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[6]]) //  
             }
         }).then(()=>{
             var spawn = require('child_process').spawn
