@@ -1,8 +1,6 @@
 .mt {
     margin-top: 64px;
     color: brown;
-    font-weight: bold;
-    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
 
 .lc {
@@ -12,8 +10,6 @@
     background-color: rgba(255, 255, 255, 0.1);
     background-blend-mode: darken;
     color: brown;
-    font-weight: bold;
-    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
     height: 100vh;
     background-attachment: fixed;
     overflow:auto; 
@@ -39,6 +35,4 @@
 
 .menu2 {
     background-color: rgba(182, 26, 26, 0);
-    font-weight: bold;
-    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
