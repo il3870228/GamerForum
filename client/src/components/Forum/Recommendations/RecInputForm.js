@@ -10,6 +10,7 @@ class RecInputForm extends Component {
   }
 
   handleSubmit(e) {
+    e.preventDefault();
     console.log('handleSubmit in RecInputForm');
     this.props.form.validateFields((err, values) => {
       if (!err) {
