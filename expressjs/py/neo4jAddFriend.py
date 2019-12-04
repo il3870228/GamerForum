@@ -7,7 +7,7 @@ db = GraphDatabase.driver(uri, auth=("neo4j", "12345678"))
 userid = sys.argv[1]
 friendid = sys.argv[2]
 
-cqlNodeQuery = " MATCH (x: USER {userid: " + userid + "}), (y: USER {userid: " + friendid + "}) CREATE (x)-[r:Friend]->(y)"
+cqlNodeQuery = " MATCH (x: USER {userid: " + userid + "}), (y: USER {userid: " + friendid + "}) MERGE (x)-[r:Friend]->(y)"
 
 with db.session() as graphDB_Session:
     nodes = graphDB_Session.run(cqlNodeQuery)
