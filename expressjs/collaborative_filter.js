@@ -130,11 +130,15 @@ function recommand(input_data, data_base, max_score){
     //recommand the player who I do not know yet
     let temp_ret_list = new Array();
     let my_friend_list = new Array();
-    for(let i = 0; i < input_data.friend_list; i++){
+    for(let i = 0; i < input_data.friend_list.length; i++){
         let dmy = my_friend_list.push(input_data.friend_list[i].user_id)
     }
+    // console.log("my_friend_list")
+    // console.log(my_friend_list)
+    // while (1) {}
     for(let i = 0; i < user_idx.length; i++){
-        if(user_idx[i] in my_friend_list){// i have already known this user
+        // if(user_idx[i] in my_friend_list){// i have already known this user
+        if(my_friend_list.includes(user_idx[i])){// i have already known this user
             continue;
         }
         let data_list = dict[user_idx[i]]
@@ -163,6 +167,9 @@ function recommand(input_data, data_base, max_score){
         }
         let dum_r = ret_list.push(ret)
     }
+    // console.log('ret_list')
+    // console.log(ret_list)
+    // while (1) {}
     return ret_list
 }
 

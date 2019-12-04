@@ -269,7 +269,7 @@ app.post('/api/recommend', (req,res,next)=>{
         // use filter to find recommmendations for game "game"
         //Data_base for all user: list of object: list of  {id, score, position, friend_list}
         // friend_list: [{user_id, rating}] from table FRIENDWITH
-        console.log("start calling filter")
+        // console.log("start calling filter")
         return con.query_p(`select userid as id, \`rank\` as score , favoriteposition as position from PLAYED where gameid = ${game}`)
     }) .then((value)=>{
         universe = JSON.parse(JSON.stringify(value)) // deep copy
@@ -297,63 +297,27 @@ app.post('/api/recommend', (req,res,next)=>{
 
         let max_score = Math.max(..._arr)
         output = JSON.parse( JSON.stringify(recommend(input_date, universe, max_score))) // list of {user_id, ...}
-
-        // res.send(['one','otwo','three'])
-    }).then((value)=>{
+        // console.log('output')
+        // console.log(output)
+        // while (1) {}
         return con.query_p(`select username, userid from USER `)
     }).then((value)=>{
         let recommened_friend = []
         for (let i in output){
             for (let j in value){
                 if (output[i].user_id == value[j].userid){
-                    recommened_friend.push(value[j].username)
+                    // console.log({user_name:value[j].username, average_rate:output[j].average_rate})
+                    recommened_friend.push({user_name:value[j].username, average_rate:output[i].average_rate})
                 }
             }
         }
         // res.send([{user_name:"1",average_rate:22.1},{user_name:"2",average_rate:1.1}])
+
         res.send(recommened_friend)
     })
 })
 
 
-// lookup function: transforms an array of usernames to an array of userids
-// output is a string of JSON array
-function to_id( usernames ){
-	return con.query_p(`select username, userid from USER;`).then((value)=>{
-        var output = []
-		for (let i in usernames){
-			for (let j in value){
-				if (value[j].username == usernames[i]){
-					output.push(value[j].userid)
-					break
-				}
-			}
-        }
-		if (output.length == usernames.length){
-			console.log("look up success!!!")
-        }
-		return Promise.resolve(JSON.stringify(output))
-	})
-}
-
-// given a list of id, return username
-to_name  = ( userids )=>{
-  con.query_p(`select username, userid from USER`).then((value)=>{
-		var output = []
-		for (let i in userids){
-			for (let j in value){
-				if (value[j].userid == userids[i]){
-					output.push(value[j].username)
-					break
-				}
-			}
-		}
-		if (output.length == usernames.length){
-            console.log(output)
-        }
-		return JSON.stringify(output)
-	   })
-}
 
 // TODO:
 app.post('/api/recommend/add',(req,res)=>{
@@ -387,7 +351,7 @@ app.post('/api/recommend/add',(req,res)=>{
             res.send('done')
         },()=>{
             console.log('adding friend rejects')
-            res.send('not done')
+            res.send('not done')    
         })
     })
 })
