@@ -41,9 +41,15 @@ class PossibleFriends extends Component {
         
     }
 
-    handleChange(checkedValues) {
-        console.log('handleChange, checkedValues: ', checkedValues);
-        this.setState({ selectedFriends: checkedValues });
+    handleChange(e) {
+        console.log('handleChange, e: ', e);
+        const selectedFriend = e.target.value;
+        const newSelectedFriend = this.state.selectedFriends;
+        if (!newSelectedFriend.includes(selectedFriend)) {
+            newSelectedFriend.push(selectedFriend);
+        }
+        console.log('handleChange, newSelectedFriend: ', newSelectedFriend);
+        this.setState({ selectedFriends: newSelectedFriend });
     }
 
     handleSubmit() {
@@ -67,7 +73,7 @@ class PossibleFriends extends Component {
             console.log("response data", res.data)
             this.setState({
                 possibleFriends: res.data,
-                selectedFriends: defaultCheckValues,
+                selectedFriends: [],
             });
         })
         // modify lines below to fit: 
@@ -85,8 +91,6 @@ class PossibleFriends extends Component {
             <div className='margins'>
                 <Checkbox.Group
                     className='pf'
-                    onChange={this.handleChange}
-                    value={this.state.selectedFriends}
                 >
                     <List
                         size="large"
@@ -97,7 +101,7 @@ class PossibleFriends extends Component {
                         renderItem={
                             item =>
                                 <List.Item className="lgrey">
-                                    <Checkbox className="lgrey" value={item}>
+                                    <Checkbox className="lgrey" value={item} onChange={this.handleChange}>
                                         {item}
                                     </Checkbox>
                                 </List.Item>
