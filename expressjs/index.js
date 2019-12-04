@@ -404,8 +404,13 @@ app.post('/api/possibleFriends',(req,res)=>{
             possible_user = JSON.parse(possible_user)
             res.send(possible_user)
         })
+		
+		// trying exec-sync
+		//var execSync = require('exec-sync')
+		//var user = execSync (`python3 ./py/neo4jKnow.py ${this_userid}`)
     })
 })
+
 
 
 
@@ -415,7 +420,6 @@ app.post('/api/possibleFriends/add',(req,res)=>{
     let selectedFriends = req.body.selectedFriends
     let this_selected_friend_id = []
     let _arr = []
-    let p_count = 0
     con.query_p(`select username, userid from USER;`).then((value)=>{
         for (let i in value){
             if (value[i].username == this_username ){
@@ -452,45 +456,13 @@ app.post('/api/possibleFriends/add',(req,res)=>{
             // while (1) {
             //     console.log(selectedFriends)
             // }
-            if (this_selected_friend_id.length >= 1){
+            var processes = []
             var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[0]]) //  
-            }
             // this_userid; this_selected_friend_id;
-            // for (let i in this_selected_friend_id){
-            //     processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
-            // }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 2){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[1]]) //  
+            for (let i in this_selected_friend_id){
+                processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
             }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 3){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[2]]) //  
-            }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 4){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[3]]) //  
-            }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 5){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[4]]) //  
-            }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 6){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[5]]) //  
-            }
-        }).then(()=>{
-            if (this_selected_friend_id.length >= 7){
-            var spawn = require('child_process').spawn
-            let p = spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[6]]) //  
-            }
-        }).then(()=>{
+        }).then(()=>{console.log('neo4j friend updated')},()=>{console.log('neo4j friend failed partially')}) .then(()=>{
             var spawn = require('child_process').spawn
             var process1 = spawn('python3',['./py/neo4jKnow.py',this_userid])
             process1.stdout.on('data',(data)=>{
@@ -502,6 +474,71 @@ app.post('/api/possibleFriends/add',(req,res)=>{
             })
         })
     })
+
+
+//app.post('/api/possibleFriends/add',(req,res)=>{
+//    let this_username = req.body.username
+//    let this_userid = -1
+//    let selectedFriends = req.body.selectedFriends
+//	console.log('++++++add possible firends ++++++++')
+//	console.log(selectedFriends)
+//    let this_selected_friend_id = []
+//    let _arr = []
+//    let p_count = 0
+//    con.query_p(`select username, userid from USER;`).then((value)=>{
+//        for (let i in value){
+//            if (value[i].username == this_username ){
+//                this_userid = value[i].userid
+//                break
+//            }
+//        }
+//        return con.query_p(`select username, userid from USER;`)
+//    }).then((value)=>{
+//		for (let i in selectedFriends){
+//			for (let j in value){
+//				if (value[j].username == selectedFriends[i]){
+//                    this_selected_friend_id.push(value[j].userid)
+//				}
+//			}
+//        }
+//    }).then(()=>{
+//        for (let i in this_selected_friend_id){
+//            _arr.push(con.query_p(`insert into FRIENDWITH (id,friendid, rate) values (${this_userid}, ${this_selected_friend_id[i]}, 3 )`))
+//        }
+//        return Promise.all(_arr)}).then(()=>{
+//            console.log("adding friend works")
+//            // res.send('done')
+//            return Promise.resolve()
+//        },()=>{
+//            console.log('adding friend rejects')
+//            // res.send('not done')    
+//            return Promise.resolve()
+//        }).then(()=>{
+//            console.log('99999999999909999999999999')
+//            // TODO: update neo4j as well here using subprocess 
+//            console.log('selectedFriends')
+//            console.log(selectedFriends)
+//            // while (1) {
+//            //     console.log(selectedFriends)
+//            // }
+//            var spawn = require('child_process').spawn
+//            let processes = []
+//            this_userid; this_selected_friend_id;
+//            for (let i in this_selected_friend_id){
+//                processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
+//        }
+//    }).then(()=>{},()=>{}).then(()=>{
+//            var spawn = require('child_process').spawn
+//            var process1 = spawn('python3',['./py/neo4jKnow.py',this_userid])
+//            process1.stdout.on('data',(data)=>{
+//                let possible_user = data.toString()
+//                possible_user = JSON.parse(possible_user)
+//                console.log('possible_user')
+//                console.log(possible_user)
+//                res.send(possible_user)
+//            })
+//        })
+//    })
     
     
     /*SHOW CREATE TABLE mytable; show constraints*/
