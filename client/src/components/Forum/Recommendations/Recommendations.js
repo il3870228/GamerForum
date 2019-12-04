@@ -51,7 +51,10 @@ class Recommendations extends Component {
         // }
         // TODO: modify below with recFriend
         console.log('recommendation input form values: ', values);
-
+        // this.setState({
+        //     DisplayInputForm: false,
+        //     RecFriendList: [{user_name: 'test123', average_rate: 123}]
+        // });
     }
 
     onSubmitOutputForm(values) {

@@ -46,7 +46,7 @@ class RecOutputForm extends Component {
     }
     const checkboxsArr = this.props.recResults.map((rec) =>
       <Row>
-          <Checkbox value={rec}>
+          <Checkbox value={rec.user_name}>
             {rec.user_name + " | Score: " + rec.average_rate}
           </Checkbox>
       </Row>);
