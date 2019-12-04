@@ -10,6 +10,8 @@ module.exports = override(
     javascriptEnabled: true,
     modifyVars: { 
         '@primary-color': '#B03A2E',
+        '@comment-author-time-color': '#283747',
+        '@comment-action-color': '#283747',
     },
   }),
 );
