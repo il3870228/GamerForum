@@ -459,7 +459,7 @@ app.post('/api/possibleFriends/add',(req,res)=>{
 
             })
             })
-        })
+    })
     
     
     /*SHOW CREATE TABLE mytable; show constraints*/
