@@ -37,11 +37,14 @@ class Forum extends Component {
   }
 
   getAllPosts(){
+    const data_send = {
+      game: this.props.game,
+    };
     console.log("inside get all posts");
     //TODO: get data from back end and set state
 
     //get all post
-    axios.post(home_url + "api/get")
+    axios.post(home_url + "api/get", data_send)
     .then(res =>{
       console.log("get all posts mount data", res.data)
       this.setState({posts: res.data});
