@@ -466,7 +466,7 @@ app.post('/api/possibleFriends/add',(req,res)=>{
             for (let i in this_selected_friend_id){
                 processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
             }
-        }).then(()=>{console.log('neo4j friend updated')},()=>{console.log('neo4j friend failed partially')}) .then(()=>{
+        }).then(()=>{console.log('neo4j friend updated')},()=>{console.log('neo4j friend failed partially')}).then(()=>{
             var spawn = require('child_process').spawnSync
             var process1 = spawn('python3',['./py/neo4jKnow.py',this_userid])
 			//process1.stdout.on('data',(data)=>{
@@ -476,7 +476,7 @@ app.post('/api/possibleFriends/add',(req,res)=>{
             //    console.log(possible_user)
             //    res.send(possible_user)
             //})
-            console.log('possible_user')
+            console.log('possible_user after ADD')
             console.log(JSON.stringify(JSON.parse( process1.stdout )))
 			res.send(JSON.parse( process1.stdout ))
         })
