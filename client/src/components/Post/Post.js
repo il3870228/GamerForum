@@ -160,7 +160,10 @@ class Post extends Component {
 					/>
 				</Tooltip>
 				<span>{likes}</span>
-			</span>
+			</span>,
+			<span key="Reply to" onClick={this.popOpenCommentInput}>
+				Reply
+			</span>,
 		];
 		return (
 			<div className='outer'>
