@@ -374,6 +374,14 @@ app.post('/api/recommend/add',(req,res)=>{
             console.log('adding friend rejects')
             res.send('not done')    
         })
+    }).then(()=>{
+        var processes = []
+        var spawn = require('child_process').spawn
+        // this_userid; this_selected_friend_id;
+        for (let i in this_selected_friend_id){
+            processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
+        }
+        console.log("++++++++++++++")
     })
 })
 
@@ -388,7 +396,7 @@ app.post('/api/possibleFriends',(req,res)=>{
             }
         }
         var spawn = require('child_process').spawn
-        console.log('this user id ',this_userid)
+        // console.log('this user id ',this_userid)
         var process = spawn('python3',['./py/neo4jKnow.py',this_userid])
         process.stdout.on('data',(data)=>{
             let possible_user = data.toString()
@@ -429,36 +437,37 @@ app.post('/api/possibleFriends/add',(req,res)=>{
         }
         return Promise.all(_arr)}).then(()=>{
             console.log("adding friend works")
-            res.send('done')
+            // res.send('done')
             return Promise.resolve()
         },()=>{
             console.log('adding friend rejects')
-            res.send('not done')    
+            // res.send('not done')    
             return Promise.resolve()
         }).then(()=>{
-            console.log('99999999999909999999999999')
+            // console.log('99999999999909999999999999')
             // TODO: update neo4j as well here using subprocess 
             console.log('selectedFriends')
-            while (1) {
-                console.log(selectedFriends)
-            }
+            console.log(selectedFriends)
+            // while (1) {
+            //     console.log(selectedFriends)
+            // }
             var processes = []
             var spawn = require('child_process').spawn
             // this_userid; this_selected_friend_id;
             for (let i in this_selected_friend_id){
-                processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, selectedFriends[i]]))
+                processes.push(spawn('python3',['./py/neo4jAddFriend.py',this_userid, this_selected_friend_id[i]]))
             }
         }).then(()=>{
             var spawn = require('child_process').spawn
             var process1 = spawn('python3',['./py/neo4jKnow.py',this_userid])
             process1.stdout.on('data',(data)=>{
                 let possible_user = data.toString()
-                console.log(possible_user)
                 possible_user = JSON.parse(possible_user)
+                console.log('possible_user')
+                console.log(possible_user)
                 res.send(possible_user)
-
             })
-            })
+        })
     })
     
     
