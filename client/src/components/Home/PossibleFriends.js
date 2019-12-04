@@ -90,6 +90,7 @@ class PossibleFriends extends Component {
                 >
                     <List
                         size="large"
+                        className='bc'
                         header={<div className="lgrey">Add Friends!</div>}
                         bordered
                         dataSource={this.state.possibleFriends}

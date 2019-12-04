@@ -111,6 +111,7 @@ class UserProfile extends Component {
 					<Table
 						columns={tableColumns}
 						dataSource={tableData}
+						pagination={false}
 						size="small"
 						bordered
 					/>
