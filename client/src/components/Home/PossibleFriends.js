@@ -31,13 +31,14 @@ class PossibleFriends extends Component {
         // {
         //     possibleFriends: a list of strings
         // }
-        axios.post(home_url + "api/Friend", send)
+        axios.post(home_url + "api/possibleFriends", send)
         .then(res=>{
             console.log("response data", res.data)
+            this.setState({possibleFriends: res.data});
             // this.setState({possibleFriends: res.data.friend});
         })
         // change line below: 
-        this.setState({possibleFriends: testFriends1});
+        
     }
 
     handleChange(checkedValues) {
@@ -54,27 +55,27 @@ class PossibleFriends extends Component {
         //     selectedFriends: this.state.selectedFriends
         // }
         const send = {
-            selectedFriends: this.state.selectedFriends
+            selectedFriends: this.state.selectedFriends,
+            username: this.props.username,
         }
         // Get from back-end: 
         // {
         //     possibleFriends: a list of strings
         // }
-        // axios.post(home_url + "api/sellect_friend", send)
-        // .then(res=>{
-        //     console.log("response data", res.data)
-        //     // const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
-        //     // this.setState({
-        //     //     possibleFriends: nextFriends,
-        //     //     selectedFriends: defaultCheckValues,
-        //     // });
-        // })
+        axios.post(home_url + "api/recommend/add", send)
+        .then(res=>{
+            console.log("response data", res.data)
+            this.setState({
+                possibleFriends: res.data,
+                selectedFriends: defaultCheckValues,
+            });
+        })
         // modify lines below to fit: 
-        const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
-        this.setState({
-            possibleFriends: nextFriends,
-            selectedFriends: defaultCheckValues,
-        });
+        // const nextFriends = this.state.possibleFriends === testFriends1 ? testFriends2 : testFriends1;
+        // this.setState({
+        //     possibleFriends: nextFriends,
+        //     selectedFriends: defaultCheckValues,
+        // });
     }
 
     render() {
