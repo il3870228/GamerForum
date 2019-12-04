@@ -46,8 +46,8 @@ class RouterLayout extends Component {
     return (
       <div>
         <Layout>
-          <Header>
-            <Menu
+          <Header className='menu'>
+            <Menu className='menu2'
               onClick={this.handleClick}
               theme="dark"
               mode="horizontal"
@@ -70,13 +70,13 @@ class RouterLayout extends Component {
                 Search
                 <Link to={{ pathname: '/Search', state: { username: username } }} />
               </Menu.Item>
-              <Menu.Item key='/'>
-                Sign out
-                <Link to='/' />
-              </Menu.Item>
               <Menu.Item key='/Profile'>
                 Profile
                 <Link to={{ pathname: '/Profile', state: { username: username } }} />
+              </Menu.Item>
+              <Menu.Item key='/'>
+                Sign out
+                <Link to='/' />
               </Menu.Item>
             </Menu>
           </Header>

@@ -27,4 +27,16 @@
     background-size: 100% 100%;
     background-color: white;
     height: 100vh;
+    background-attachment: fixed;
+    overflow:auto; 
+}
+
+.menu {
+    background-color: rgba(0, 0, 0, 0.87);
+}
+
+.menu2 {
+    background-color: rgba(182, 26, 26, 0);
+    font-weight: bold;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
