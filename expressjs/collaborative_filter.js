@@ -101,9 +101,9 @@ function recommand(input_data, data_base, max_score){
                 let dddddm = arr.push(temp)
     // }
     }
-	// console.log('-------------------------------------')
-    // console.log('arr.length')
-    // console.log(arr.length)
+	console.log('-------------------------------------')
+    console.log('arr.length')
+    console.log(total_count)
 	// console.log('-------------------------------------')
     //build a sparse mtx
     var dict = {}
@@ -111,7 +111,7 @@ function recommand(input_data, data_base, max_score){
     for(let i = 0; i < total_count; i++){
         let list_i = arr[i].friend_list
         // console.log("user id: ", arr[i].id)
-        // console.log(list_i)
+        console.log(list_i)
         for(let j = 0; j < list_i.length; j ++){
             let temp_user = list_i[j].user_id
             // console.log("friend id: ", temp_user)
@@ -188,13 +188,13 @@ function recommand(input_data, data_base, max_score){
         for(i = 0; i < 3; i++){
             // console.log("average rate: ", temp_ret_list[i][1])
             while(1){
-                if(my_friend_list.includes(user_idx[m])){
+                if(my_friend_list.includes(arr[m].id)){
 
                     m += 1;
                     continue
                 }
                 let ret = {
-                    user_id: user_idx[m],
+                    user_id: arr[m].id,
                     average_rate: -1
                 }
                 let sdsds = ret_list.push(ret)
