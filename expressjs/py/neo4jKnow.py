@@ -18,7 +18,7 @@ result = []
 for i in range(len(obj)):
    result.append(obj[i]['y.username'])
 
-cqlNodeQuery =  """MATCH (n:USER) WHERE NOT (n)-[]-() RETURN n.username;"""
+cqlNodeQuery =  "MATCH (n:USER) WHERE not (n)-[]-(:USER{userid:" + userid + " }) RETURN n.username;"
 with db.session() as graphDB_Session:
     nodes = graphDB_Session.run(cqlNodeQuery)
 obj = nodes.data()
