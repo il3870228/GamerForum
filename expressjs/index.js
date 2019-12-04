@@ -246,6 +246,8 @@ app.post('/api/recommend', (req,res,next)=>{
     let userid = -1
 
     let universe = [] // used for recommendation algorithm
+    let output = []
+
     console.log("game id is " + game)
     con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
         userid = value[0].userid
@@ -301,10 +303,22 @@ app.post('/api/recommend', (req,res,next)=>{
             }
         }
         let max_score = Math.max(..._arr)
-        let output = recommend(input_date, universe, max_score)
-        console.log(output)
-        return output
-    }).then()
+        output = recommend(input_date, universe, max_score) // list of {user_id, ...}
+        // res.send(['one','otwo','three'])
+    }).then((value)=>{
+        return con.query_p(`select username, userid from USER `)
+    }).then((value)=>{
+        let recommened_friend = []
+        for (let i in output){
+            for (let j in value){
+                if (output[i].user_id == value[j].userid){
+                    recommened_friend.push(value[j].username)
+                }
+            }
+        }
+
+        res.send(recommened_friend)
+    })
 })
 
 
