@@ -19,6 +19,7 @@ class Post extends Component {
 			action: null,
 			comments: this.props.comments,
 			onEdit: false,
+			onComment: false,
 			postid: this.props.postid//post id
 		}
 		this.onClickLike = this.onClickLike.bind(this);
@@ -27,6 +28,14 @@ class Post extends Component {
 		this.onDeleteComment = this.onDeleteComment.bind(this);
 		this.onClickEdit = this.onClickEdit.bind(this);
 		this.onSubmitEdit = this.onSubmitEdit.bind(this);
+		this.popOpenCommentInput = this.popOpenCommentInput.bind(this);
+	}
+
+	popOpenCommentInput() {
+		this.setState({
+			onComment: true,
+			onEdit: false,
+		})
 	}
 
 	onSubmitEdit(updatedContent) {
@@ -47,7 +56,7 @@ class Post extends Component {
 	}
 
 	onClickEdit() {
-		this.setState({ onEdit: true });
+		this.setState({ onEdit: true, onComment: false });
 	}
 
 	onDeleteComment(CID) {
@@ -136,7 +145,10 @@ class Post extends Component {
 						onClick={this.onClickEdit}
 					/>
 				</Tooltip>
-			</span>
+			</span>,
+			<span key="Reply to" onClick={this.popOpenCommentInput}>
+				Reply
+			</span>,
 		];
 		const diffViewerAuthorActions = [
 			<span key="post-like">
@@ -161,7 +173,7 @@ class Post extends Component {
 					</Tooltip>}
 				/>
 				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit} /> : null}
-				{this.state.onEdit ? null : <CommentForm onComment={this.onComment} />}
+				{this.state.onComment ? <CommentForm onComment={this.onComment} /> : null}
 				<div className='inner'>
 					{this.state.comments.map(
 						(p) =>
