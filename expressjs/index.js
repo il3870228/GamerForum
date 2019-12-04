@@ -320,38 +320,56 @@ app.post('/api/recommend', (req,res,next)=>{
             }
         }
 
-        res.send(['1','2','3'])
+        // res.send(['1','2','3'])
         res.send(recommened_friend)
     })
 })
 
 
+// lookup function: transforms an array of usernames to an array of userids 
+// output is a string of JSON array
+lookup = ( usernames )=>{
+	con.query_p(`select username, userid from USER`).then((value)=>{
+		var output = []
+		for (let i in usernames){
+			for (let j in value){
+				if (value[j].username == usernames[i]){
+					output.push(value[j].userid)
+					break
+				}
+			}
+		}
+		if (output.length == usernames.length){
+			console.log("look up success!!!")	
+		}
+		return JSON.stringify(output)
+	})
+}
 
-
+// TODO: 
 app.post('/api/recommend/add',(req,res)=>{
     let this_username = req.body.username 
     let this_userid = -1 
     let this_selected_friend_name = req.body.selectedFriends
     let this_selected_friend_id = []
     let this_map = []
-    con.query_p(`select username, userid from USER`).then((value)=>{
-        this_map = JSON.parse(JSON.stringify(value))
-    })
-
+    
     res.send('done')
 })
 
-
+// TODO: 
 app.post('/api/recommend/add',(req,res)=>{
 
     res.send('done')
 })
 
+// TODO: 
 app.post('/api/possibleFriends',(req,res)=>[
     
     res.send(['friend one','firn1','wiw','wafawfawef'])
 ])
 
+// TODO: 
 app.post('/api/possibleFriends/add',(req,res)=>[
     
     res.send(1)
