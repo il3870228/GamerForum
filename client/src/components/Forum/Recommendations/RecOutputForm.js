@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Form, Button, Checkbox, Row } from 'antd';
+import { Form, Button, Checkbox, Row, Column } from 'antd';
 import 'antd/dist/antd.css';
+import './Rec.css';
 class RecOutputForm extends Component {
   constructor(props) {
-      super(props);
-      this.state = {};
-      this.handleSubmit = this.handleSubmit.bind(this);
+    super(props);
+    this.state = {};
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
@@ -40,34 +41,34 @@ class RecOutputForm extends Component {
         sm: {
           span: 16,
           offset: 8,
-         },
+        },
       }
     }
-    const checkboxsArr = this.props.recResults.map(rec => 
-    <Row>
-        <Checkbox value={rec}>
-            {rec}
-        </Checkbox>
-    </Row>);
+    const checkboxsArr = this.props.recResults.map((rec) =>
+      <Row>
+          <Checkbox value={rec}>
+            {rec.user_name + " | Score: " + rec.average_rate}
+          </Checkbox>
+      </Row>);
     return (
-        <div>
-        Teammate Recommendations: 
+      <div>
+        Teammate Recommendations:
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className='rec-output-form'>
-            <Form.Item>
+          <Form.Item>
             {getFieldDecorator('checkbox-group')(
-                <Checkbox.Group style={{ width: '100%' }}>
+              <Checkbox.Group style={{ width: '100%' }}>
                 {checkboxsArr}
-                </Checkbox.Group>,
+              </Checkbox.Group>,
             )}
-            </Form.Item>
+          </Form.Item>
           <Form.Item {...buttonFormItemLayout}>
             <Button type="primary" htmlType="submit" className='recommendation-button'>
               Add Friends!
             </Button>
           </Form.Item>
         </Form>
-        </div>
+      </div>
     );
   }
 }
-export default Form.create({name: 'RecOutputForm'})(RecOutputForm);
+export default Form.create({ name: 'RecOutputForm' })(RecOutputForm);
