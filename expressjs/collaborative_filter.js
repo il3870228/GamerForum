@@ -1,11 +1,46 @@
 //calculate the cosine distance between two user
 //input: A: data for user A, B: data for user B
-function calc_eu_dist(A,B){
+function calc_eu_dist(A,B, friend_list_A, friend_list_B){
     let temp_a = A[0]-B[0]
-    let temp_b = A[1]-B[1]
-    let diff = temp_a*temp_a + temp_b*temp_b;
+    let diff = temp_a*temp_a
     // console.log(temp_a, temp_b)
     diff = Math.sqrt(diff);
+
+    let count = 0;
+    let numeritor = 0;
+    let norm_A = 0;
+    let norm_B = 0;
+    // console.log("len:", friend_list_A.length)
+    // return 0
+    for(let i = 0; i < friend_list_A.length; i++){
+        for(let j = 0; j < friend_list_B.length; j++){
+            // console.log('i: ', i)
+            // console.log(friend_list_A[i].user_id)
+            if(friend_list_A[i].user_id == friend_list_B[j].user_id){
+                count += 1;
+                numeritor += friend_list_A[i].rating*friend_list_B[j].rating
+                norm_A += friend_list_A[i].rating*friend_list_A[i].rating
+                norm_B += friend_list_B[j].rating*friend_list_B[j].rating
+                break
+            // let nnnn = 1;
+            }
+            // let a = 5;
+        }
+    }
+    if(count < 2){
+        if (count == 1){
+            diff += 0.4
+        }
+        else{
+            diff += 0.35
+        }
+    }
+    else{
+        let temp_cos = numeritor / (Math.sqrt(norm_A) * Math.sqrt(norm_B))
+        console.log("cos: ", temp_cos)
+        diff += 0.8 * (1 - temp_cos)
+    }
+
     return diff;
 }
 
@@ -27,12 +62,15 @@ function recommand(input_data, data_base, max_score){
         if(query_id == temp.id){
             continue;
         }
+        if(query_pos !==  temp.position){
+            continue;
+        }
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
         console.log("id :",temp.id)
-        let diff = calc_eu_dist(vec_A, vec_B)
+        let diff = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
         console.log(" diff :", diff)
-        if(diff < 0.4){
+        if(diff < 0.8){
                 total_count += 1;
                 let dum2 = sim.push(1 - diff);
                 let dddddm = arr.push(temp)
@@ -44,7 +82,7 @@ function recommand(input_data, data_base, max_score){
     var user_idx = new Array()
     for(i = 0; i < total_count; i++){
         let list_i = arr[i].friend_list
-        console.log("user id: ", arr[i].id)
+        // console.log("user id: ", arr[i].id)
         console.log(list_i)
         for(j = 0; j < list_i.length; j ++){
             let temp_user = list_i[j].user_id
@@ -74,7 +112,7 @@ function recommand(input_data, data_base, max_score){
     //recommand the player who I do not know yet
     let temp_ret_list = new Array();
     let my_friend_list = new Array();
-    for(i = 0; i < input_data.my_friend_list; i++){
+    for(i = 0; i < input_data.friend_list; i++){
         let dmy = my_friend_list.push(input_data.friend_list[i].user_id)
     }
     for(i = 0; i < user_idx.length; i++){
