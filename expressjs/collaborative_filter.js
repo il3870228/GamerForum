@@ -11,7 +11,7 @@ function calc_eu_dist(A,B){
 
 //recommand user I do not know yet
 // input: query data: object, data in data_base: list of object, weight: object
-// output: the most 5 similar query
+// output: top 3 recommended player
 // object attribute: rank score, Favorite position, rating
 function recommand(input_data, data_base, max_score){
     let sim = new Array();
@@ -99,9 +99,13 @@ function recommand(input_data, data_base, max_score){
     temp_ret_list.sort(function(a,b){return b[1]-a[1]})
 
     let ret_list = new Array();
-    for(i = 0; i < 2 && i < temp_ret_list.length; i++){
+    for(i = 0; i < 3 && i < temp_ret_list.length; i++){
         console.log("average rate: ", temp_ret_list[i][1])
-        let dum_r = ret_list.push(temp_ret_list[i])
+        let ret = {
+            user_id: temp_ret_list[i][0],
+            average_rate: temp_ret_list[i][1]
+        }
+        let dum_r = ret_list.push(ret)
     }
     return ret_list
 }
