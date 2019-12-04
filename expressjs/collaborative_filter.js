@@ -135,7 +135,8 @@ function recommand(input_data, data_base, max_score){
             }
         }
     }
-    // console.log(user_idx)
+    console.log(user_idx)
+    console.log('-----test -----')
 
     //recommand the player who I do not know yet
     let temp_ret_list = new Array();
@@ -183,22 +184,29 @@ function recommand(input_data, data_base, max_score){
     if(ret_list.length == 0){
         // randomly recommend
         let m = 0;
+
         for(i = 0; i < 3; i++){
             // console.log("average rate: ", temp_ret_list[i][1])
             while(1){
                 if(my_friend_list.includes(user_idx[m])){
-                    let ret = {
-                        user_id: user_idx[m],
-                        average_rate: -1
-                    }
-                    let sdsds = ret_list.push(ret)
+
                     m += 1;
-                    break
+                    continue
                 }
+                let ret = {
+                    user_id: user_idx[m],
+                    average_rate: -1
+                }
+                let sdsds = ret_list.push(ret)
                 m += 1
+                break
             }
      }
+
     }
+    console.log(ret_list)
+    console.log(user_idx)
+    console.log("-----finish-------")
     return ret_list
 }
 
