@@ -62,7 +62,7 @@ class PossibleFriends extends Component {
         // {
         //     possibleFriends: a list of strings
         // }
-        axios.post(home_url + "api/recommend/add", send)
+        axios.post(home_url + "api/possibleFriends/add", send)
         .then(res=>{
             console.log("response data", res.data)
             this.setState({
