@@ -66,10 +66,10 @@ function recommand(input_data, data_base, max_score){
     const query_id = input_data.id;
     const query_score = 5 * input_data.score /  max_score;
 
-    console.log(query_score)
-    console.log("--------------------------------------------------")
-    console.log(max_score)
-    console.log("--------------------------------------------------")
+    // console.log(query_score)
+    // console.log("--------------------------------------------------")
+    // console.log(max_score)
+    // console.log("--------------------------------------------------")
 
     const query_pos = input_data.position;
     // console.log(data_base.length)
@@ -180,6 +180,25 @@ function recommand(input_data, data_base, max_score){
     // console.log('ret_list')
     // console.log(ret_list)
     // while (1) {}
+    if(ret_list.length == 0){
+        // randomly recommend
+        let m = 0;
+        for(i = 0; i < 3; i++){
+            // console.log("average rate: ", temp_ret_list[i][1])
+            while(1){
+                if(my_friend_list.includes(user_idx[m])){
+                    let ret = {
+                        user_id: user_idx[m],
+                        average_rate: -1
+                    }
+                    let sdsds = ret_list.push(ret)
+                    m += 1;
+                    break
+                }
+                m += 1
+            }
+     }
+    }
     return ret_list
 }
 
