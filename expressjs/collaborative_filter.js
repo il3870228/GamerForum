@@ -37,7 +37,7 @@ function calc_eu_dist(A,B, friend_list_A, friend_list_B){
     }
     else{
         let temp_cos = numeritor / (Math.sqrt(norm_A) * Math.sqrt(norm_B))
-        console.log("cos: ", temp_cos)
+        // console.log("cos: ", temp_cos)
         diff += 0.8 * (1 - temp_cos)
     }
 
@@ -67,9 +67,9 @@ function recommand(input_data, data_base, max_score){
         }
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
-        console.log("id :",temp.id)
+        // console.log("id :",temp.id)
         let diff = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
-        console.log(" diff :", diff)
+        // console.log(" diff :", diff)
         if(diff < 0.8){
                 total_count += 1;
                 let dum2 = sim.push(1 - diff);
@@ -127,10 +127,10 @@ function recommand(input_data, data_base, max_score){
             temp_sum += temp_obj[0]*temp_obj[1]
             temp_weight_sum += temp_obj[0]
         }
-        console.log("temp sum and weight", temp_sum, temp_weight_sum)
-        console.log("id: ", user_idx[i])
+        // console.log("temp sum and weight", temp_sum, temp_weight_sum)
+        // console.log("id: ", user_idx[i])
         let avg_rate = temp_sum/temp_weight_sum
-        console.log("rate : ", avg_rate)
+        // console.log("rate : ", avg_rate)
         let dummm_t = temp_ret_list.push( [user_idx[i],avg_rate] )
     }
     
@@ -138,7 +138,7 @@ function recommand(input_data, data_base, max_score){
 
     let ret_list = new Array();
     for(i = 0; i < 3 && i < temp_ret_list.length; i++){
-        console.log("average rate: ", temp_ret_list[i][1])
+        // console.log("average rate: ", temp_ret_list[i][1])
         let ret = {
             user_id: temp_ret_list[i][0],
             average_rate: temp_ret_list[i][1]
