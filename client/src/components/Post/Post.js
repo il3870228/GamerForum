@@ -137,12 +137,24 @@ class Post extends Component {
 					/>
 				</Tooltip>
 			</span>
-		]
+		];
+		const diffViewerAuthorActions = [
+			<span key="post-like">
+				<Tooltip title="Like">
+					<Icon
+						type = "like"
+						theme={action === 'liked'? 'filled':'outlined'}
+						onClick={this.onClickLike}
+					/>
+				</Tooltip>
+				<span>{likes}</span>
+			</span>
+		];
     return (
 			<div className='outer'>
 				<Comment
 						author={this.state.username}
-						actions={actions}
+						actions={this.props.viewerUsername===this.props.username? actions : diffViewerAuthorActions}
 						content={this.state.postContent}
 						datetime= {<Tooltip title={this.state.postTime}>
 							<span>{this.state.postTime}</span>
