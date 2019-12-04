@@ -45,18 +45,7 @@ con.constructor.prototype.query_p = (sql) => {
     })
 }
 
-con.query_p(`select * from USER;`).then((value) => {
-        console.log("first query test run" + `${JSON.stringify(value)}`)
-    })    //////////////// mysql
 
-var my_global = 0
-con.query_p(`select * from USER;`).then((value) => {
-        console.log("second query test run" + `${JSON.stringify(value)}`)
-        my_global = 10000
-    }).then(()=>{console.log("what the fuck")
-    }).then(()=>{console.log(my_global) // return 10000; assignment worked
-        })
-    console.log("my global is ",my_global) // return 0
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
@@ -280,6 +269,7 @@ app.post('/api/recommend', (req,res,next)=>{
         // use filter to find recommmendations for game "game"
         //Data_base for all user: list of object: list of  {id, score, position, friend_list}
         // friend_list: [{user_id, rating}] from table FRIENDWITH
+        console.log("start calling filter")
         return con.query_p(`select userid as id, \`rank\` as score , favoriteposition as position from PLAYED where gameid = ${game}`)
     }) .then((value)=>{
         universe = JSON.parse(JSON.stringify(value)) // deep copy
@@ -304,8 +294,10 @@ app.post('/api/recommend', (req,res,next)=>{
                 input_date = JSON.parse(JSON.stringify(universe[i])) // deep copy
             }
         }
+
         let max_score = Math.max(..._arr)
         output = JSON.parse( JSON.stringify(recommend(input_date, universe, max_score))) // list of {user_id, ...}
+
         // res.send(['one','otwo','three'])
     }).then((value)=>{
         return con.query_p(`select username, userid from USER `)
@@ -318,7 +310,7 @@ app.post('/api/recommend', (req,res,next)=>{
                 }
             }
         }
-        // res.send(['1','2','3'])
+        // res.send([{user_name:"1",average_rate:22.1},{user_name:"2",average_rate:1.1}])
         res.send(recommened_friend)
     })
 })
@@ -326,9 +318,9 @@ app.post('/api/recommend', (req,res,next)=>{
 
 // lookup function: transforms an array of usernames to an array of userids
 // output is a string of JSON array
-to_id = ( usernames )=>{
-	con.query_p(`select username, userid from USER`).then((value)=>{
-		var output = []
+function to_id( usernames ){
+	return con.query_p(`select username, userid from USER;`).then((value)=>{
+        var output = []
 		for (let i in usernames){
 			for (let j in value){
 				if (value[j].username == usernames[i]){
@@ -336,11 +328,11 @@ to_id = ( usernames )=>{
 					break
 				}
 			}
-		}
+        }
 		if (output.length == usernames.length){
 			console.log("look up success!!!")
-		}
-		return JSON.stringify(output)
+        }
+		return Promise.resolve(JSON.stringify(output))
 	})
 }
 
@@ -357,8 +349,8 @@ to_name  = ( userids )=>{
 			}
 		}
 		if (output.length == usernames.length){
-			console.log("look up success!!!")
-		}
+            console.log(output)
+        }
 		return JSON.stringify(output)
 	   })
 }
@@ -366,22 +358,37 @@ to_name  = ( userids )=>{
 // TODO:
 app.post('/api/recommend/add',(req,res)=>{
     let this_username = req.body.username
-    let this_userid = JSON.parse(to_id([this_username]))[0]
-    console.log(this_userid)
+    let this_userid = -1
     let selectedFriends = req.body.selectedFriends
-    let this_selected_friend_id = JSON.parse(to_id(selectedFriends))
-    console.log(this_selected_friend_id)
-    while (1){}
+    let this_selected_friend_id = []
     let _arr = []
-    for (let i in this_selected_friend_id){
-      _arr.push(con.query_p(`insert into FRIENDWITH (id,friendid, rate) values (${this_userid}, ${this_selected_friend_id[i]}, 3 )`))
-    }
-    Promise.all(_arr).then(()=>{
-        console.log("adding friend works")
-        res.send('done')
-    },()=>{
-        console.log('adding friend rejects')
-        res.send('not done')
+    con.query_p(`select username, userid from USER;`).then((value)=>{
+        for (let i in value){
+            if (value[i].username == this_username ){
+                this_userid = value[i].userid
+                break
+            }
+        }
+        return con.query_p(`select username, userid from USER;`)
+    }).then((value)=>{
+		for (let i in selectedFriends){
+			for (let j in value){
+				if (value[j].username == selectedFriends[i]){
+                    this_selected_friend_id.push(value[j].userid)
+				}
+			}
+        }
+    }).then(()=>{
+        for (let i in this_selected_friend_id){
+            _arr.push(con.query_p(`insert into FRIENDWITH (id,friendid, rate) values (${this_userid}, ${this_selected_friend_id[i]}, 3 )`))
+        }
+        Promise.all(_arr).then(()=>{
+            console.log("adding friend works")
+            res.send('done')
+        },()=>{
+            console.log('adding friend rejects')
+            res.send('not done')
+        })
     })
 })
 

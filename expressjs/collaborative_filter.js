@@ -49,42 +49,60 @@ function calc_eu_dist(A,B, friend_list_A, friend_list_B){
 // output: top 3 recommended player
 // object attribute: rank score, Favorite position, rating
 function recommand(input_data, data_base, max_score){
+    // console.log("--------------------------------------------------")
+    // console.log('input_data')
+    // console.log(input_data)
+    // console.log("--------------------------------------------------")
+    // console.log("--------------------------------------------------")
+    // console.log('data_base')
+    // console.log(data_base)
+    // console.log("--------------------------------------------------")
+    // console.log("--------------------------------------------------")
+    // console.log('max_score')
+    // console.log(max_score)
+    // console.log("--------------------------------------------------")
     let sim = new Array();
     let arr = new Array();
     var total_count = 0;
     const query_id = input_data.id;
     const query_score = 5 * input_data.score /  max_score;
     const query_pos = input_data.position;
-    for(i = 0; i < data_base.length; i++){
+    // console.log(data_base.length)
+    for(let i = 0; i < data_base.length; i++){
         let temp = data_base[i]
         //calculate the eucidean similarity distance
         // add weight later
         if(query_id == temp.id){
+            // console.log("skipped")
             continue;
         }
-        if(query_pos !==  temp.position){
+        if(query_pos.toUpperCase() !=  temp.position.toUpperCase()){
+            // console.log(query_pos, " ---- --- --- ---", temp.position)
             continue;
         }
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
         // console.log("id :",temp.id)
         let diff = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
-        // console.log(" diff :", diff)
+        // console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
         if(diff < 0.8){
                 total_count += 1;
                 let dum2 = sim.push(1 - diff);
                 let dddddm = arr.push(temp)
         }
     }
+	// console.log('-------------------------------------')
+    // console.log('arr.length')
     // console.log(arr.length)
+	// console.log('-------------------------------------')
     //build a sparse mtx
     var dict = {}
     var user_idx = new Array()
-    for(i = 0; i < total_count; i++){
+    for(let i = 0; i < total_count; i++){
         let list_i = arr[i].friend_list
         // console.log("user id: ", arr[i].id)
         console.log(list_i)
-        for(j = 0; j < list_i.length; j ++){
+        for(let j = 0; j < list_i.length; j ++){
             let temp_user = list_i[j].user_id
             // console.log("friend id: ", temp_user)
             if(temp_user == query_id){
@@ -107,22 +125,22 @@ function recommand(input_data, data_base, max_score){
             }
         }
     }
-    console.log(user_idx)
+    // console.log(user_idx)
 
     //recommand the player who I do not know yet
     let temp_ret_list = new Array();
     let my_friend_list = new Array();
-    for(i = 0; i < input_data.friend_list; i++){
+    for(let i = 0; i < input_data.friend_list; i++){
         let dmy = my_friend_list.push(input_data.friend_list[i].user_id)
     }
-    for(i = 0; i < user_idx.length; i++){
+    for(let i = 0; i < user_idx.length; i++){
         if(user_idx[i] in my_friend_list){// i have already known this user
             continue;
         }
         let data_list = dict[user_idx[i]]
         let temp_sum = 0
         let temp_weight_sum = 0
-        for(j = 0; j < data_list.length; j++){
+        for(let j = 0; j < data_list.length; j++){
             temp_obj = data_list[j]
             temp_sum += temp_obj[0]*temp_obj[1]
             temp_weight_sum += temp_obj[0]
