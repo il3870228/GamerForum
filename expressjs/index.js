@@ -57,6 +57,7 @@ con.query_p(`select * from USER;`).then((value) => {
 var express = require('express');
 var cors = require('cors'); // Leo Lee's suggestion
 var app = express();
+var recommend = require('./collaborative_filter')
 
 app.use(cors()); // Leo Lee's suggestion to remove same origin policy error
 app.get('/a', (req, res) => {
@@ -66,7 +67,9 @@ app.get('/a', (req, res) => {
 app.get('/a/b', (req, res) => {
     res.send('a/b');
 });
-var url = require('url');
+
+
+
 
 /*parsing HTTP request body*/
 var bodyParser = require('body-parser');
@@ -241,6 +244,8 @@ app.post('/api/recommend', (req,res,next)=>{
     let ranking = parseInt(req.body.ranking)
     let role = req.body.role
     let userid = -1
+
+    let universe = [] // used for recommendation algorithm
     console.log("game id is " + game)
     con.query_p(`select userid from USER where username = \'${username}\'`).then((value)=>{
         userid = value[0].userid
@@ -268,10 +273,38 @@ app.post('/api/recommend', (req,res,next)=>{
         con.query_p(sql)
         console.log("recommendation inserted!")
     }).then(()=>{
-        let a = 0
-    } , (err) => {
-        console.log(err)
-    })
+        // use filter to find recommmendations for game "game"
+        //Data_base for all user: list of object: list of  {id, score, position, friend_list}
+        // friend_list: [{user_id, rating}] from table FRIENDWITH
+        return con.query_p(`select userid as id, \`rank\` as score , favoriteposition as position from PLAYED where gameid = ${game}`)
+    }) .then((value)=>{
+        universe = JSON.parse(JSON.stringify(value)) // deep copy
+        for (let i in universe){
+            universe[i].friend_list = []
+        }
+        return con.query_p(`select id, friendid as user_id, rate as rating from FRIENDWITH`)
+    }).then((value)=>{
+        let friends = value
+        for (let i in universe){
+            for (let j in friends){
+                if (universe[i].id == friends[j].id){
+                    universe[i].friend_list.push({user_id: friends[j].user_id , rating: friends[j].rating })
+                }
+            }
+        }
+        let input_date = []        
+        let _arr = []
+        for (let i in universe){
+            _arr.push(universe[i].score)
+            if (universe[i].id == userid){
+                input_date = JSON.parse(JSON.stringify(universe[i])) // deep copy
+            }
+        }
+        let max_score = Math.max(..._arr)
+        let output = recommend(input_date, universe, max_score)
+        console.log(output)
+        return output
+    }).then()
 })
 
 
