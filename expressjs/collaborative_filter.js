@@ -63,9 +63,6 @@ function recommand(input_data, data_base, max_score){
         if(query_id == temp.id){
             continue;
         }
-        if(query_pos !==  temp.position){
-            continue;
-        }
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
         // console.log("id :",temp.id)
@@ -78,8 +75,8 @@ function recommand(input_data, data_base, max_score){
                 total_count += 1;
                 let dum2 = sim.push(similarity);
                 let dddddm = arr.push(temp)
-        }
     }
+
     // console.log(arr.length)
     //build a sparse mtx
     var dict = {}
