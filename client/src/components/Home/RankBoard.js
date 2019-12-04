@@ -81,7 +81,7 @@ class RankBoard extends Component {
         return (
             <div className='margins'>
                 <Table
-                    className='lgrey'
+                    className='bc'
                     columns={tableColumns}
                     dataSource={tableData}
                     size="small"
