@@ -3,6 +3,7 @@ import { Comment, Icon, Tooltip } from "antd";
 import 'antd/dist/antd.css';
 import EditForm from '../EditForm';
 import axios from 'axios';
+import './Comment.css';
 const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 class CommentPost extends Component {
 	constructor(props){
@@ -103,6 +104,7 @@ class CommentPost extends Component {
     return (
 			<div>
 				<Comment
+						className='commentStyle'
 						author={this.state.username}
 						actions={this.props.username===this.props.viewerUsername? actions : diffViewerActions}
 						content={this.state.postContent}

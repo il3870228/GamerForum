@@ -168,6 +168,7 @@ class Post extends Component {
 		return (
 			<div className='outer'>
 				<Comment
+					className='poststyle'
 					author={this.state.username}
 					actions={this.props.viewerUsername === this.props.username ? actions : diffViewerAuthorActions}
 					content={this.state.postContent}
