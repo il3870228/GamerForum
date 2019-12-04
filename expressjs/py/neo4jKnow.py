@@ -24,7 +24,8 @@ with db.session() as graphDB_Session:
 obj = nodes.data()
 for i in range(len(obj)):
    result.append(obj[i]['n.username'])
-
-print(result)
+if (len(result)>7):
+    result = result[0:7]
+print(json.dumps(result))
 
 

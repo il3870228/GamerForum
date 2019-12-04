@@ -101,9 +101,9 @@ function recommand(input_data, data_base, max_score){
                 let dddddm = arr.push(temp)
     // }
     }
-	// console.log('-------------------------------------')
-    // console.log('arr.length')
-    // console.log(arr.length)
+	console.log('-------------------------------------')
+    console.log('arr.length')
+    console.log(total_count)
 	// console.log('-------------------------------------')
     //build a sparse mtx
     var dict = {}
@@ -111,7 +111,7 @@ function recommand(input_data, data_base, max_score){
     for(let i = 0; i < total_count; i++){
         let list_i = arr[i].friend_list
         // console.log("user id: ", arr[i].id)
-        // console.log(list_i)
+        console.log(list_i)
         for(let j = 0; j < list_i.length; j ++){
             let temp_user = list_i[j].user_id
             // console.log("friend id: ", temp_user)
@@ -135,7 +135,8 @@ function recommand(input_data, data_base, max_score){
             }
         }
     }
-    // console.log(user_idx)
+    console.log(user_idx)
+    console.log('-----test -----')
 
     //recommand the player who I do not know yet
     let temp_ret_list = new Array();
@@ -183,22 +184,29 @@ function recommand(input_data, data_base, max_score){
     if(ret_list.length == 0){
         // randomly recommend
         let m = 0;
+
         for(i = 0; i < 3; i++){
             // console.log("average rate: ", temp_ret_list[i][1])
             while(1){
-                if(my_friend_list.includes(user_idx[m])){
-                    let ret = {
-                        user_id: user_idx[m],
-                        average_rate: -1
-                    }
-                    let sdsds = ret_list.push(ret)
+                if(my_friend_list.includes(arr[m].id)){
+
                     m += 1;
-                    break
+                    continue
                 }
+                let ret = {
+                    user_id: arr[m].id,
+                    average_rate: -1
+                }
+                let sdsds = ret_list.push(ret)
                 m += 1
+                break
             }
      }
+
     }
+    console.log(ret_list)
+    console.log(user_idx)
+    console.log("-----finish-------")
     return ret_list
 }
 
