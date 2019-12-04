@@ -9,7 +9,7 @@ import './Post.css';
 import axios from 'axios';
 const home_url = "http://Ec2-3-135-223-12.us-east-2.compute.amazonaws.com:3000/";
 class Post extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			username: this.props.username,
@@ -19,7 +19,7 @@ class Post extends Component {
 			action: null,
 			comments: this.props.comments,
 			onEdit: false,
-			postid:this.props.postid//post id
+			postid: this.props.postid//post id
 		}
 		this.onClickLike = this.onClickLike.bind(this);
 		this.onComment = this.onComment.bind(this);
@@ -39,36 +39,36 @@ class Post extends Component {
 		//call axios update
 		console.log("send is ", send);
 		axios.post(home_url + "api/update_post", send)
-		.then(res =>{
-			console.log("updated post ", res.data)
-		})
-		this.setState({onEdit: false, postContent: updatedContent});
+			.then(res => {
+				console.log("updated post ", res.data)
+			})
+		this.setState({ onEdit: false, postContent: updatedContent });
 
 	}
 
 	onClickEdit() {
-		this.setState({onEdit: true});
+		this.setState({ onEdit: true });
 	}
 
-  onDeleteComment(CID) {
+	onDeleteComment(CID) {
 		//TODO: delete comment in backend
 		var ps = this.state.comments;
-    var c = 0;
-    for (c = 0; c < ps.length; c++) {
-      var p = ps[c];
-      if (p.commentid === CID) {
-            ps.splice(c, 1);
-          }
-	}
-	var send ={
-		commentid: CID
-	}
-	//CALL DELETE ON AXIOS
-	axios.post(home_url + "api/delete_comment", send)
-		.then(res=>{
-			console.log("delete comment success")
-		})
-    this.setState({comments: ps});
+		var c = 0;
+		for (c = 0; c < ps.length; c++) {
+			var p = ps[c];
+			if (p.commentid === CID) {
+				ps.splice(c, 1);
+			}
+		}
+		var send = {
+			commentid: CID
+		}
+		//CALL DELETE ON AXIOS
+		axios.post(home_url + "api/delete_comment", send)
+			.then(res => {
+				console.log("delete comment success")
+			})
+		this.setState({ comments: ps });
 	}
 
 	onClickDelete() {
@@ -85,14 +85,14 @@ class Post extends Component {
 			time: c.time,
 			content: c.content,
 			postid: this.state.postid
-		  }
-		console.log("comment send ",newC)
+		}
+		console.log("comment send ", newC)
 		axios.post(home_url + "api/post_comment", newC)
-		.then(res => {
-			console.log("post comment success")
+			.then(res => {
+				console.log("post comment success")
 
-			this.props.getAllPosts()
-		})
+				this.props.getAllPosts()
+			})
 		// newComments.unshift(newC);
 		// this.setState({comments: newComments});
 		// console.log(this.state.comments);
@@ -107,15 +107,15 @@ class Post extends Component {
 		});
 	}
 
-  render() {
+	render() {
 		const { likes, action } = this.state;
 		console.log('postTime: ', this.state.postTime);
 		const actions = [
 			<span key="post-like">
 				<Tooltip title="Like">
 					<Icon
-						type = "like"
-						theme={action === 'liked'? 'filled':'outlined'}
+						type="like"
+						theme={action === 'liked' ? 'filled' : 'outlined'}
 						onClick={this.onClickLike}
 					/>
 				</Tooltip>
@@ -124,7 +124,7 @@ class Post extends Component {
 			<span key="delete">
 				<Tooltip title="Delete">
 					<Icon
-						type = "delete"
+						type="delete"
 						onClick={this.onClickDelete}
 					/>
 				</Tooltip>
@@ -132,29 +132,53 @@ class Post extends Component {
 			<span key="edit">
 				<Tooltip title="Edit">
 					<Icon
-						type = "edit"
+						type="edit"
 						onClick={this.onClickEdit}
 					/>
 				</Tooltip>
 			</span>
-		]
-    return (
+		];
+		const diffViewerAuthorActions = [
+			<span key="post-like">
+				<Tooltip title="Like">
+					<Icon
+						type="like"
+						theme={action === 'liked' ? 'filled' : 'outlined'}
+						onClick={this.onClickLike}
+					/>
+				</Tooltip>
+				<span>{likes}</span>
+			</span>
+		];
+		return (
 			<div className='outer'>
 				<Comment
-						author={this.state.username}
-						actions={actions}
-						content={this.state.postContent}
-						datetime= {<Tooltip title={this.state.postTime}>
-							<span>{this.state.postTime}</span>
-						</Tooltip>}
+					author={this.state.username}
+					actions={this.props.viewerUsername === this.props.username ? actions : diffViewerAuthorActions}
+					content={this.state.postContent}
+					datetime={<Tooltip title={this.state.postTime}>
+						<span>{this.state.postTime}</span>
+					</Tooltip>}
 				/>
-				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit}/> : null}
-				{this.state.onEdit? null : <CommentForm onComment={this.onComment}/>}
+				{this.state.onEdit ? <EditForm onSubmitEdit={this.onSubmitEdit} /> : null}
+				{this.state.onEdit ? null : <CommentForm onComment={this.onComment} />}
 				<div className='inner'>
-				{this.state.comments.map((p) => <CommentPost key={p.commentid} commentid={p.commentid} postid={p.postid} username={p.username} postContent={p.content} postTime={p.time} onDeleteComment={this.onDeleteComment}/>)}
+					{this.state.comments.map(
+						(p) =>
+							<CommentPost
+								key={p.commentid}
+								viewerUsername={this.props.viewerUsername}
+								commentid={p.commentid}
+								postid={p.postid}
+								username={p.username}
+								postContent={p.content}
+								postTime={p.time}
+								onDeleteComment={this.onDeleteComment}
+							/>)
+					}
 				</div>
 			</div>
-			);
-  }
+		);
+	}
 }
 export default Post;
