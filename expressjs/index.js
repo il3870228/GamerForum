@@ -36,6 +36,9 @@ con.constructor.prototype.query_p = (sql) => {
     return new Promise((resolve, reject) => {
         con.connect((err) => {
             con.query(sql, (err, result) => {
+                if (err){
+                    reject(err)
+                }
                 resolve(result)
             })
         })
@@ -317,9 +320,42 @@ app.post('/api/recommend', (req,res,next)=>{
             }
         }
 
+        res.send(['1','2','3'])
         res.send(recommened_friend)
     })
 })
+
+
+
+
+app.post('/api/recommend/add',(req,res)=>{
+    let this_username = req.body.username 
+    let this_userid = -1 
+    let this_selected_friend_name = req.body.selectedFriends
+    let this_selected_friend_id = []
+    let this_map = []
+    con.query_p(`select username, userid from USER`).then((value)=>{
+        this_map = JSON.parse(JSON.stringify(value))
+    })
+
+    res.send('done')
+})
+
+
+app.post('/api/recommend/add',(req,res)=>{
+
+    res.send('done')
+})
+
+app.post('/api/possibleFriends',(req,res)=>[
+    
+    res.send(['friend one','firn1','wiw','wafawfawef'])
+])
+
+app.post('/api/possibleFriends/add',(req,res)=>[
+    
+    res.send(1)
+])
 
 
 /*SHOW CREATE TABLE mytable; show constraints*/
@@ -477,6 +513,7 @@ app.post('/api/update_post', post_update);
 
 /*sanity check*/
 app.get('*', (req, res) => {
+    // con.query_p(`insert into FRIENDWITH values (1,1,2);`).then(()=>{res.send('success!!!')}, ()=>{res.send('failed!!!!')})
     res.send('success mee');
 });
 
