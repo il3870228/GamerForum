@@ -59,13 +59,17 @@ function recommand(input_data, data_base, max_score){
     // console.log("--------------------------------------------------")
     // console.log("--------------------------------------------------")
     // console.log('max_score')
-    // console.log(max_score)
-    // console.log("--------------------------------------------------")
     let sim = new Array();
     let arr = new Array();
     var total_count = 0;
     const query_id = input_data.id;
     const query_score = 5 * input_data.score /  max_score;
+
+    console.log(query_score)
+    console.log("--------------------------------------------------")
+    console.log(max_score)
+    console.log("--------------------------------------------------")
+
     const query_pos = input_data.position;
     // console.log(data_base.length)
     for(let i = 0; i < data_base.length; i++){
@@ -82,9 +86,9 @@ function recommand(input_data, data_base, max_score){
         }
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
-        // console.log("id :",temp.id)
+        console.log("id :",temp.id)
         let diff = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
-        // console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
+        console.log(" @@@@@@@@@@@@@@@@@@ diff :", diff)
         if(diff < 0.8){
                 total_count += 1;
                 let dum2 = sim.push(1 - diff);
