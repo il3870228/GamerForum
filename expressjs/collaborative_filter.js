@@ -27,18 +27,19 @@ function calc_eu_dist(A,B, friend_list_A, friend_list_B){
             // let a = 5;
         }
     }
+    diff = 1/diff
     if(count < 2){
         if (count == 1){
-            diff += 0.4
+            diff += 0.05
         }
         else{
-            diff += 0.35
+            diff += 0.1
         }
     }
     else{
         let temp_cos = numeritor / (Math.sqrt(norm_A) * Math.sqrt(norm_B))
         // console.log("cos: ", temp_cos)
-        diff += 0.8 * (1 - temp_cos)
+        diff += temp_cos
     }
 
     return diff;
@@ -68,11 +69,14 @@ function recommand(input_data, data_base, max_score){
         let vec_A = [query_score, query_pos]
         let vec_B = [5*temp.score/max_score, temp.position]
         // console.log("id :",temp.id)
-        let diff = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
+        let similarity = calc_eu_dist(vec_A, vec_B, input_data.friend_list,temp.friend_list)
         // console.log(" diff :", diff)
-        if(diff < 0.8){
+        // if(diff < 0.8){
+        if(query_pos ==  temp.position){
+                similarity += 0.1;
+        }
                 total_count += 1;
-                let dum2 = sim.push(1 - diff);
+                let dum2 = sim.push(similarity);
                 let dddddm = arr.push(temp)
         }
     }
