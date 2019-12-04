@@ -25,6 +25,6 @@ obj = nodes.data()
 for i in range(len(obj)):
    result.append(obj[i]['n.username'])
 
-print(result)
+print(json.dumps(result))
 
 
