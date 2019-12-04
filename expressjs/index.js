@@ -307,42 +307,13 @@ var post_save = function(req, res, next) {
 };
 app.post('/api/post', post_save);
 
-/*saving comment*/
-var comment_save = function(req, res, next) {
-    console.log('post comments start');
-    let table = 'COMMENTS';
-    let sql = `insert into ${table}( postid , username,time,content) values (${req.body.postid},\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
-    console.log(sql);
-    con.query(sql, function(err, result, fields) {
-        if (err) console.log(err);
-    });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
-    });
-    res.send({ "the freak?": 'hahahaha' });
-};
-/* comments are connected to posts.  */
-app.post('/api/post_comment', (req,res,next)=>{
-    
-    let this_postid = req.body.postid 
-    let this_username = req.body.username
-    let this_userid = -1
-    let this_time = req.body.time
-    let this_content = req.body.content
-    
-});
 
 /*search*/
 var search = (req, res, next) => {
     console.log('search here')
-    let table = 'POST'
-    let sql = `select distinct * from ${table} where username like \'%${req.body.value}%\'`
-    console.log(sql)
-    con.query(sql, (err, result, fields) => {
-        if (err) throw err
-        res.send(result)
-        console.log('search done')
+    let sql = `select distinct * from POST p inner join USER u on p.userid = u.userid where u.username like \'%${req.body.value}%\'`
+    con.query_p(sql).then((value)=>{
+        res.send(value)
     })
 };
 app.post('/api/search', search);
@@ -353,13 +324,13 @@ app.post('/api/get', (req,res,next)=>{
     let this_comments = []
     let this_game = (req.body.game == 'PUBG')? 1:0 // 1 for PUBG, 0 for Overwatch
 
-    con.query_p(`select * from POST where gameid = ${this_game} order by postid desc`).then((value)=>{
+    con.query_p(`select p.postid, p.content, p.time, u.username from POST p inner join USER u on p.userid = u.userid  where gameid = ${this_game} order by postid desc`).then((value)=>{
         this_posts = JSON.parse(JSON.stringify(value))
         for (let i in this_posts){
             this_posts[i].comments = []
         }
         console.log("comments field inserted into this_posts")
-        return con.query_p(`select * from COMMENTS order by commentid desc`)
+        return con.query_p(`select c.commentid, c.content, c.time, c.postid, u.username from COMMENTS c inner join USER u on c.userid = u.userid order by commentid desc`)
     }).then((value)=>{
         this_comments = JSON.parse(JSON.stringify(value))
     }).then(()=>{
@@ -393,12 +364,27 @@ var post_delete = (req, res, next) => {
         console.log('sql execution success!!!')
         res.send({ id: 'end of delete post!' });
     });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
-    });
 }
 app.post('/api/delete_post', post_delete)
+
+
+
+
+/* comments are connected to posts.  */
+app.post('/api/post_comment', (req,res,next)=>{
+    let this_postid = req.body.postid 
+    let this_username = req.body.username
+    let this_userid = -1
+    let this_time = req.body.time
+    let this_content = req.body.content
+    con.query_p(`select userid from USER where username = \'${this_username}\' `).then((value)=>{
+        this_userid = value[0].userid 
+        con.query_p(`insert into COMMENTS (content, time, postid, userid) values (\'${this_content}\', \'${this_time}\' , ${this_postid} , ${this_userid})`)
+    }).then(()=>{
+        console.log("comment saved!!!!!!!!!!!!!!!!!!!")
+        res.send("comment saved")
+    })
+});
 
 /*delete comment*/
 var comment_delete = (req, res, next) => {
@@ -408,14 +394,9 @@ var comment_delete = (req, res, next) => {
     // delete from POST where postid=5;
     let sql = `delete from ${table} where commentid = ${req.body.commentid}`
     console.log(sql);
-    con.query(sql, function(err, result, fields) {
-        if (err) console.log(err);
-    });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
-    });
-    res.send({ id: 'success!' });
+    con.query_p(sql).then(()=>{
+        res.send({ id: 'success!' });
+    })
 }
 app.post('/api/delete_comment', comment_delete)
 
@@ -426,15 +407,9 @@ var comment_update = function(req, res, next) {
     /*update POST set uid=NULL where postid=5;*/
     // let sql = `insert into ${table}(username,time,content) values (\'${req.body.username}\',\'${req.body.time}\',\'${req.body.content}\')`;
     let sql = `update ${table} set content=${req.body.content} where commentid=${req.body.commentid}`;
-    console.log(sql);
-    con.query(sql, function(err, result, fields) {
-        if (err) console.log(err);
-    });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
-    });
-    res.send({ id: 'success!update comment' });
+    con.query_p(sql).then(()=>{
+        res.send({ id: 'success!update comment' });
+    })
 };
 app.post('/api/update_comment', comment_update);
 
@@ -449,10 +424,6 @@ var post_update = function(req, res, next) {
     con.query(sql, function(err, result, fields) {
         if (err) console.log(err);
         res.send({ id: 'success!update post' });
-    });
-    let verify_sql = `select * from ${table}`
-    con.query(verify_sql, function(err, result, fields) {
-        console.log(result);
     });
 };
 app.post('/api/update_post', post_update);
